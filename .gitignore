@@ -10,6 +10,7 @@ profiles.yml
 secrets.toml
 
 # Local runtime and dbt artifacts
+.venv/
 *.lock
 logs/
 target/
