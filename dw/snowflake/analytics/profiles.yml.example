@@ -1,0 +1,13 @@
+snowflake_analytics:
+  target: prod
+  outputs:
+    prod:
+      type: snowflake
+      account: "{{ env_var('DBT_SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('DBT_SNOWFLAKE_USER', 'LOADER') }}"
+      password: "{{ env_var('DBT_ENV_SECRET_SNOWFLAKE_PASSWORD') }}"
+      role: DBT_TRANSFORMER_ROLE
+      database: DATA_LAB
+      warehouse: SNOWFLAKE_LEARNING_WH
+      schema: SILVER
+      threads: 4
