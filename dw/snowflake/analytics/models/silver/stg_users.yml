@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: stg_users
+    description: Usuários operacionais normalizados para consumo analítico.
+    columns:
+      - name: user_id
+        description: Identificador do usuário.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: email
+        description: Endereço de e-mail do usuário.
+
+      - name: first_name
+        description: Primeiro nome do usuário.
+
+      - name: last_name
+        description: Sobrenome do usuário.
+
+      - name: company_name
+        description: Empresa associada ao usuário, quando informada.
+
+      - name: phone
+        description: Telefone do usuário, quando informado.
+
+      - name: is_active
+        description: Indica se o cadastro está ativo.
+
+      - name: created_at_utc
+        description: Data e hora de criação normalizada para UTC.
+
+      - name: updated_at_utc
+        description: Data e hora da última atualização normalizada para UTC.
+
+      - name: deleted_at_utc
+        description: Data e hora da exclusão lógica normalizada para UTC, quando existente.
