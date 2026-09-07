@@ -415,9 +415,9 @@ T40 -> T41 -> T42
 **Requirement**: SILVER-01, SILVER-03, QUALITY-01
 **Tools**: dbt Core.
 **Done when**:
-- [ ] `carrier_id` e nome são únicos e não nulos.
-- [ ] Timestamp está em UTC.
-- [ ] O build focado passa.
+- [x] `carrier_id` e nome são únicos e não nulos.
+- [x] Timestamp está em UTC.
+- [x] O build focado passa.
 **Tests**: data + integration
 **Gate**: Focused
 **Commit**: `feat(silver): model carriers`

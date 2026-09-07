@@ -97,7 +97,7 @@ snowflake_analytics:
             node
             for node in self.manifest["nodes"].values()
             if node["resource_type"] == "test"
-            and node["test_metadata"]["name"] == "relationships"
+            and node.get("test_metadata", {}).get("name") == "relationships"
             and node.get("attached_node") == MODEL_ID
             and node["column_name"] == "parent_category_id"
         ]

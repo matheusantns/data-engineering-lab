@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: stg_carriers
+    description: Transportadoras operacionais normalizadas para consumo analítico.
+    columns:
+      - name: carrier_id
+        description: Identificador da transportadora.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: name
+        description: Nome da transportadora.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: phone
+        description: Telefone da transportadora, quando informado.
+
+      - name: created_at_utc
+        description: Data e hora de criação normalizada para UTC.

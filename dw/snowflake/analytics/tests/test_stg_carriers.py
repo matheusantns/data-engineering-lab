@@ -8,10 +8,10 @@ from pathlib import Path
 
 PROJECT_DIR = Path(__file__).resolve().parents[1]
 DBT_EXECUTABLE = Path(sys.executable).with_name("dbt.exe")
-MODEL_ID = "model.snowflake_analytics.stg_products"
+MODEL_ID = "model.snowflake_analytics.stg_carriers"
 
 
-class StgProductsTest(unittest.TestCase):
+class StgCarriersTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.temp_dir = tempfile.TemporaryDirectory()
@@ -60,7 +60,7 @@ snowflake_analytics:
     def tearDownClass(cls):
         cls.temp_dir.cleanup()
 
-    def test_model_parses_as_silver_view_from_products_source(self):
+    def test_model_parses_as_silver_view_from_carriers_source(self):
         self.assertEqual(
             self.parse_result.returncode,
             0,
@@ -70,10 +70,10 @@ snowflake_analytics:
         self.assertEqual(model["config"]["materialized"], "view")
         self.assertEqual(
             model["depends_on"]["nodes"],
-            ["source.snowflake_analytics.ecommerce.products"],
+            ["source.snowflake_analytics.ecommerce.carriers"],
         )
 
-    def test_product_id_and_slug_are_unique_and_not_null(self):
+    def test_carrier_id_and_name_are_unique_and_not_null(self):
         tests_by_column = {
             column: {
                 node["test_metadata"]["name"]
@@ -82,44 +82,22 @@ snowflake_analytics:
                 and node.get("attached_node") == MODEL_ID
                 and node["column_name"] == column
             }
-            for column in ("product_id", "slug")
+            for column in ("carrier_id", "name")
         }
         self.assertEqual(
             tests_by_column,
             {
-                "product_id": {"not_null", "unique"},
-                "slug": {"not_null", "unique"},
+                "carrier_id": {"not_null", "unique"},
+                "name": {"not_null", "unique"},
             },
         )
 
-    def test_category_id_references_categories(self):
-        relationship_tests = [
-            node
-            for node in self.manifest["nodes"].values()
-            if node["resource_type"] == "test"
-            and node.get("test_metadata", {}).get("name") == "relationships"
-            and node.get("attached_node") == MODEL_ID
-            and node["column_name"] == "category_id"
-        ]
-        self.assertEqual(len(relationship_tests), 1)
-        self.assertIn(
-            "model.snowflake_analytics.stg_categories",
-            relationship_tests[0]["depends_on"]["nodes"],
-        )
-        self.assertEqual(
-            relationship_tests[0]["test_metadata"]["kwargs"]["field"],
-            "category_id",
-        )
-
-    def test_attributes_are_preserved_and_timestamps_use_utc(self):
+    def test_timestamp_is_normalized_to_utc(self):
         raw_code = self.manifest["nodes"][MODEL_ID]["raw_code"].lower()
-        self.assertIn("\n    attributes,", raw_code)
-        self.assertNotIn("cast(attributes", raw_code)
-        for source_name in ("created_at", "updated_at", "deleted_at"):
-            self.assertIn(
-                f"convert_timezone('utc', {source_name}) as {source_name}_utc",
-                raw_code,
-            )
+        self.assertIn(
+            "convert_timezone('utc', created_at) as created_at_utc",
+            raw_code,
+        )
 
 
 if __name__ == "__main__":
