@@ -1,0 +1,16 @@
+.agents/
+.claude/
+.cursor/
+.windsurf/
+
+# Local credentials
+*.key
+*.pem
+profiles.yml
+secrets.toml
+
+# Local runtime and dbt artifacts
+*.lock
+logs/
+target/
+dbt_packages/
