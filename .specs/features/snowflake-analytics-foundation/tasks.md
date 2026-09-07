@@ -537,10 +537,10 @@ T40 -> T41 -> T42
 **Requirement**: SILVER-01, SILVER-03, QUALITY-01
 **Tools**: dbt Core.
 **Done when**:
-- [ ] `shipment_id` é único e não nulo.
-- [ ] Order e carrier referenciam dimensões operacionais.
-- [ ] Entrega nunca antecede envio quando ambos existem.
-- [ ] O build focado passa.
+- [x] `shipment_id` é único e não nulo.
+- [x] Order e carrier referenciam dimensões operacionais.
+- [x] Entrega nunca antecede envio quando ambos existem.
+- [x] O build focado passa.
 **Tests**: data + integration
 **Gate**: Focused
 **Commit**: `feat(silver): model shipments`
