@@ -1,0 +1,32 @@
+version: 2
+
+models:
+  - name: stg_cart_items
+    description: Itens dos carrinhos no grão de carrinho e variante.
+    columns:
+      - name: cart_id
+        description: Identificador do carrinho.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_carts')
+                field: cart_id
+
+      - name: variant_id
+        description: Identificador da variante adicionada.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_product_variants')
+                field: variant_id
+
+      - name: qty
+        description: Quantidade positiva da variante no carrinho.
+
+      - name: created_at_utc
+        description: Data e hora de inclusão normalizada para UTC.
+
+      - name: updated_at_utc
+        description: Data e hora da última atualização normalizada para UTC.

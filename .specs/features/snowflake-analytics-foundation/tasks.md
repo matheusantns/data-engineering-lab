@@ -450,10 +450,10 @@ T40 -> T41 -> T42
 **Requirement**: SILVER-01, SILVER-03, QUALITY-01
 **Tools**: dbt Core.
 **Done when**:
-- [ ] O grão `cart_id, variant_id` é único.
-- [ ] As duas FKs são válidas.
-- [ ] Quantidade é maior que zero.
-- [ ] O build focado passa.
+- [x] O grão `cart_id, variant_id` é único.
+- [x] As duas FKs são válidas.
+- [x] Quantidade é maior que zero.
+- [x] O build focado passa.
 **Tests**: data + integration
 **Gate**: Focused
 **Commit**: `feat(silver): model cart items`

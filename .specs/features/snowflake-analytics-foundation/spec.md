@@ -157,9 +157,9 @@ Every ambiguity is resolved or recorded here.
 | REPO-01 | Código Snowflake versionado e seguro | Tasks | In Progress (T1, T4, T11 complete) |
 | SEC-01 | Código Snowflake versionado e seguro | Tasks | In Progress (T1 complete) |
 | SEC-02 | Código Snowflake versionado e seguro | Tasks | In Tasks |
-| SILVER-01 | Silver source-conformed | Tasks | In Progress (T4, T11, T12, T22 complete) |
+| SILVER-01 | Silver source-conformed | Tasks | In Progress (T4, T11, T12, T22, T23 complete) |
 | SILVER-02 | Silver source-conformed | Tasks | In Tasks |
-| SILVER-03 | Silver source-conformed | Tasks | In Progress (T22 complete) |
+| SILVER-03 | Silver source-conformed | Tasks | In Progress (T22, T23 complete) |
 | SILVER-04 | Silver source-conformed | Tasks | In Tasks |
 | GOLD-01 | Gold dimensional de vendas | Tasks | In Progress (T4, T11, T12 complete) |
 | GOLD-02 | Gold dimensional de vendas | Tasks | In Tasks |
@@ -168,7 +168,7 @@ Every ambiguity is resolved or recorded here.
 | GOLD-05 | Gold dimensional de vendas | Tasks | In Tasks |
 | GOLD-06 | Gold dimensional de vendas | Tasks | In Tasks |
 | GOLD-07 | Gold dimensional de vendas | Tasks | In Tasks |
-| QUALITY-01 | Silver source-conformed | Tasks | In Progress (T22 complete) |
+| QUALITY-01 | Silver source-conformed | Tasks | In Progress (T22, T23 complete) |
 | QUALITY-02 | Gold dimensional de vendas | Tasks | In Tasks |
 | QUALITY-03 | Gold dimensional de vendas | Tasks | In Tasks |
 | OPS-01 | Operação manual diária | Tasks | In Tasks |
