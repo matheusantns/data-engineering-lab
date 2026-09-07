@@ -1,0 +1,24 @@
+version: 2
+
+models:
+  - name: stg_inventory
+    description: Posição atual de estoque normalizada para consumo analítico.
+    columns:
+      - name: variant_id
+        description: Identificador da variante em estoque.
+        data_tests:
+          - not_null
+          - unique
+          - relationships:
+              arguments:
+                to: ref('stg_product_variants')
+                field: variant_id
+
+      - name: quantity_on_hand
+        description: Quantidade física não negativa.
+
+      - name: quantity_reserved
+        description: Quantidade reservada não negativa.
+
+      - name: updated_at_utc
+        description: Data e hora da posição normalizada para UTC.

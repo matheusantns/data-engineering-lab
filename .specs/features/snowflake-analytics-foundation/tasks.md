@@ -398,10 +398,10 @@ T40 -> T41 -> T42
 **Requirement**: SILVER-01, SILVER-03, QUALITY-01
 **Tools**: dbt Core.
 **Done when**:
-- [ ] `variant_id` é único, não nulo e referencia variantes.
-- [ ] Quantidades são não negativas.
-- [ ] Timestamp está em UTC.
-- [ ] O build focado passa.
+- [x] `variant_id` é único, não nulo e referencia variantes.
+- [x] Quantidades são não negativas.
+- [x] Timestamp está em UTC.
+- [x] O build focado passa.
 **Tests**: data + integration
 **Gate**: Focused
 **Commit**: `feat(silver): model inventory`
