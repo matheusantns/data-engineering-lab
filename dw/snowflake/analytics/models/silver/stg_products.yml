@@ -1,0 +1,49 @@
+version: 2
+
+models:
+  - name: stg_products
+    description: Produtos operacionais normalizados para consumo analítico.
+    columns:
+      - name: product_id
+        description: Identificador do produto.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: category_id
+        description: Identificador da categoria direta do produto.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_categories')
+                field: category_id
+
+      - name: name
+        description: Nome do produto.
+
+      - name: slug
+        description: Identificador textual do produto.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: description
+        description: Descrição do produto, quando informada.
+
+      - name: attributes
+        description: Atributos semiestruturados preservados da origem.
+
+      - name: is_active
+        description: Indica se o produto está ativo.
+
+      - name: search
+        description: Representação de busca preservada da origem.
+
+      - name: created_at_utc
+        description: Data e hora de criação normalizada para UTC.
+
+      - name: updated_at_utc
+        description: Data e hora da última atualização normalizada para UTC.
+
+      - name: deleted_at_utc
+        description: Data e hora da exclusão lógica normalizada para UTC, quando existente.

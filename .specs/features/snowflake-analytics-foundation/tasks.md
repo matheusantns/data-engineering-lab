@@ -347,10 +347,10 @@ T40 -> T41 -> T42
 **Requirement**: SILVER-01, SILVER-03, QUALITY-01
 **Tools**: dbt Core.
 **Done when**:
-- [ ] `product_id` e `slug` são únicos e não nulos.
-- [ ] `category_id` referencia categorias.
-- [ ] Atributos sem equivalente analítico são preservados sem coerção destrutiva.
-- [ ] O build focado passa.
+- [x] `product_id` e `slug` são únicos e não nulos.
+- [x] `category_id` referencia categorias.
+- [x] Atributos sem equivalente analítico são preservados sem coerção destrutiva.
+- [x] O build focado passa.
 **Tests**: data + integration
 **Gate**: Focused
 **Commit**: `feat(silver): model products`
