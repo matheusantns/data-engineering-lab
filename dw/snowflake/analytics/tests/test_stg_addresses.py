@@ -8,10 +8,10 @@ from pathlib import Path
 
 PROJECT_DIR = Path(__file__).resolve().parents[1]
 DBT_EXECUTABLE = Path(sys.executable).with_name("dbt.exe")
-MODEL_ID = "model.snowflake_analytics.stg_users"
+MODEL_ID = "model.snowflake_analytics.stg_addresses"
 
 
-class StgUsersTest(unittest.TestCase):
+class StgAddressesTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.temp_dir = tempfile.TemporaryDirectory()
@@ -63,7 +63,7 @@ snowflake_analytics:
     def tearDownClass(cls):
         cls.temp_dir.cleanup()
 
-    def test_model_parses_as_silver_view_from_users_source(self):
+    def test_model_parses_as_silver_view_from_addresses_source(self):
         self.assertEqual(
             self.parse_result.returncode,
             0,
@@ -73,30 +73,46 @@ snowflake_analytics:
         self.assertEqual(model["config"]["materialized"], "view")
         self.assertEqual(
             model["depends_on"]["nodes"],
-            ["source.snowflake_analytics.ecommerce.users"],
+            ["source.snowflake_analytics.ecommerce.addresses"],
         )
 
-    def test_user_id_is_unique_and_not_null(self):
+    def test_address_id_is_unique_and_not_null(self):
         tests = {
             node["test_metadata"]["name"]
             for node in self.manifest["nodes"].values()
             if node["resource_type"] == "test"
-            and node.get("attached_node") == MODEL_ID
-            and node["column_name"] == "user_id"
+            and MODEL_ID in node["depends_on"]["nodes"]
+            and node["column_name"] == "address_id"
         }
         self.assertEqual(tests, {"not_null", "unique"})
 
-    def test_timestamps_are_normalized_to_utc(self):
+    def test_user_id_references_users(self):
+        relationship_tests = [
+            node
+            for node in self.manifest["nodes"].values()
+            if node["resource_type"] == "test"
+            and node["test_metadata"]["name"] == "relationships"
+            and MODEL_ID in node["depends_on"]["nodes"]
+            and node["column_name"] == "user_id"
+        ]
+        self.assertEqual(len(relationship_tests), 1)
+        self.assertIn(
+            "model.snowflake_analytics.stg_users",
+            relationship_tests[0]["depends_on"]["nodes"],
+        )
+        self.assertEqual(
+            relationship_tests[0]["test_metadata"]["kwargs"]["field"],
+            "user_id",
+        )
+
+    def test_country_code_and_timestamps_preserve_contract(self):
         raw_code = self.manifest["nodes"][MODEL_ID]["raw_code"].lower()
-        for source_name in ("created_at", "updated_at", "deleted_at"):
+        self.assertIn("country_code", raw_code)
+        for source_name in ("created_at", "updated_at"):
             self.assertIn(
                 f"convert_timezone('utc', {source_name}) as {source_name}_utc",
                 raw_code,
             )
-
-    def test_password_hash_is_absent_from_the_model(self):
-        raw_code = self.manifest["nodes"][MODEL_ID]["raw_code"].lower()
-        self.assertNotIn("password_hash", raw_code)
 
 
 if __name__ == "__main__":

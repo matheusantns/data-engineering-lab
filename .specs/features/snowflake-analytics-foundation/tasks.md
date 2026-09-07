@@ -314,10 +314,10 @@ T40 -> T41 -> T42
 **Requirement**: SILVER-01, SILVER-03, QUALITY-01
 **Tools**: dbt Core.
 **Done when**:
-- [ ] `address_id` é único e não nulo.
-- [ ] `user_id` referencia usuários.
-- [ ] Country code e timestamps preservam contrato.
-- [ ] O build focado passa.
+- [x] `address_id` é único e não nulo.
+- [x] `user_id` referencia usuários.
+- [x] Country code e timestamps preservam contrato.
+- [x] O build focado passa.
 **Tests**: data + integration
 **Gate**: Focused
 **Commit**: `feat(silver): model addresses`
