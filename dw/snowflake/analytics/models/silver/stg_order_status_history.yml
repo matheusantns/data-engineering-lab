@@ -1,0 +1,39 @@
+version: 2
+
+models:
+  - name: stg_order_status_history
+    description: Histórico operacional das transições de status dos pedidos.
+    columns:
+      - name: history_id
+        description: Identificador do evento de histórico.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: order_id
+        description: Identificador do pedido.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_orders')
+                field: order_id
+
+      - name: status
+        description: Estado assumido pelo pedido.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - pending
+                  - paid
+                  - processing
+                  - shipped
+                  - delivered
+                  - cancelled
+
+      - name: note
+        description: Observação opcional sobre a mudança.
+
+      - name: changed_at_utc
+        description: Data e hora da mudança normalizada para UTC.
