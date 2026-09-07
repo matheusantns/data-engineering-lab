@@ -1,0 +1,31 @@
+version: 2
+
+models:
+  - name: stg_product_images
+    description: Imagens de produtos normalizadas para consumo analítico.
+    columns:
+      - name: image_id
+        description: Identificador da imagem.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: product_id
+        description: Identificador do produto retratado.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_products')
+                field: product_id
+
+      - name: url
+        description: URL da imagem.
+
+      - name: alt_text
+        description: Texto alternativo da imagem, quando informado.
+
+      - name: sort_order
+        description: Ordem da imagem dentro do produto.
+
+      - name: created_at_utc
+        description: Data e hora de criação normalizada para UTC.
