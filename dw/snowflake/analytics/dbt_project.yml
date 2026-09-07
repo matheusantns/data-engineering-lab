@@ -1,0 +1,36 @@
+name: snowflake_analytics
+version: "1.0.0"
+config-version: 2
+
+profile: snowflake_analytics
+
+flags:
+  send_anonymous_usage_stats: false
+  warn_error_options:
+    error: all
+    silence:
+      - UnusedResourceConfigPath
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+target-path: target
+log-path: logs
+packages-install-path: dbt_packages
+clean-targets:
+  - target
+  - logs
+  - dbt_packages
+
+models:
+  snowflake_analytics:
+    silver:
+      +materialized: view
+      +schema: SILVER
+    gold:
+      +materialized: table
+      +schema: GOLD
