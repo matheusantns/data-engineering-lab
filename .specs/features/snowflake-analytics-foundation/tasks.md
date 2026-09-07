@@ -519,11 +519,11 @@ T40 -> T41 -> T42
 **Requirement**: SILVER-01, SILVER-04, QUALITY-01
 **Tools**: dbt Core.
 **Done when**:
-- [ ] `payment_id` é único e não nulo.
-- [ ] Order referencia pedidos.
-- [ ] Status e provider aceitam somente valores da origem.
-- [ ] Amount é não negativo e moeda está preenchida.
-- [ ] O build focado passa.
+- [x] `payment_id` é único e não nulo.
+- [x] Order referencia pedidos.
+- [x] Status e provider aceitam somente valores da origem.
+- [x] Amount é não negativo e moeda está preenchida.
+- [x] O build focado passa.
 **Tests**: data + integration
 **Gate**: Focused
 **Commit**: `feat(silver): model payments`

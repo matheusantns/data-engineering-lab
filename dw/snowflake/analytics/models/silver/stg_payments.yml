@@ -1,0 +1,56 @@
+version: 2
+
+models:
+  - name: stg_payments
+    description: Pagamentos operacionais dos pedidos com domínios validados.
+    columns:
+      - name: payment_id
+        description: Identificador do pagamento.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: order_id
+        description: Identificador do pedido pago.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_orders')
+                field: order_id
+
+      - name: amount
+        description: Valor não negativo do pagamento.
+
+      - name: currency
+        description: Código obrigatório da moeda do pagamento.
+        data_tests:
+          - not_null
+
+      - name: provider
+        description: Provedor utilizado no pagamento.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - card
+                  - paypal
+                  - bank_transfer
+
+      - name: provider_ref
+        description: Referência opcional do provedor.
+
+      - name: status
+        description: Estado do pagamento.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - pending
+                  - authorized
+                  - captured
+                  - failed
+                  - refunded
+
+      - name: created_at_utc
+        description: Data e hora de criação normalizada para UTC.
