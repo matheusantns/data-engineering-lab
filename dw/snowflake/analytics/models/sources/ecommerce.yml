@@ -1,0 +1,135 @@
+version: 2
+
+sources:
+  - name: ecommerce
+    description: Dados operacionais do e-commerce carregados pelo pipeline dlt.
+    database: DATA_LAB
+    schema: BRONZE
+    tables:
+      - name: users
+        description: Usuários cadastrados no e-commerce.
+        columns:
+          - name: user_id
+            description: Identificador do usuário.
+            data_tests:
+              - not_null
+
+      - name: addresses
+        description: Endereços de cobrança e entrega dos usuários.
+        columns:
+          - name: address_id
+            description: Identificador do endereço.
+            data_tests:
+              - not_null
+
+      - name: categories
+        description: Categorias do catálogo de produtos.
+        columns:
+          - name: category_id
+            description: Identificador da categoria.
+            data_tests:
+              - not_null
+
+      - name: products
+        description: Produtos disponíveis no catálogo.
+        columns:
+          - name: product_id
+            description: Identificador do produto.
+            data_tests:
+              - not_null
+
+      - name: product_variants
+        description: Variantes comercializáveis dos produtos.
+        columns:
+          - name: variant_id
+            description: Identificador da variante.
+            data_tests:
+              - not_null
+
+      - name: product_images
+        description: Imagens associadas aos produtos.
+        columns:
+          - name: image_id
+            description: Identificador da imagem.
+            data_tests:
+              - not_null
+
+      - name: inventory
+        description: Posição atual de estoque por variante.
+        columns:
+          - name: variant_id
+            description: Identificador da variante em estoque.
+            data_tests:
+              - not_null
+
+      - name: carriers
+        description: Transportadoras disponíveis para expedição.
+        columns:
+          - name: carrier_id
+            description: Identificador da transportadora.
+            data_tests:
+              - not_null
+
+      - name: carts
+        description: Carrinhos de compra de usuários e visitantes.
+        columns:
+          - name: cart_id
+            description: Identificador do carrinho.
+            data_tests:
+              - not_null
+
+      - name: cart_items
+        description: Variantes e quantidades adicionadas aos carrinhos.
+        columns:
+          - name: cart_id
+            description: Identificador do carrinho.
+            data_tests:
+              - not_null
+
+      - name: orders
+        description: Pedidos realizados pelos usuários.
+        columns:
+          - name: order_id
+            description: Identificador do pedido.
+            data_tests:
+              - not_null
+
+      - name: order_items
+        description: Variantes e valores registrados nos pedidos.
+        columns:
+          - name: order_id
+            description: Identificador do pedido.
+            data_tests:
+              - not_null
+
+      - name: order_status_history
+        description: Histórico das mudanças de status dos pedidos.
+        columns:
+          - name: history_id
+            description: Identificador do evento de mudança de status.
+            data_tests:
+              - not_null
+
+      - name: payments
+        description: Tentativas e resultados de pagamento dos pedidos.
+        columns:
+          - name: payment_id
+            description: Identificador do pagamento.
+            data_tests:
+              - not_null
+
+      - name: shipments
+        description: Remessas e rastreamento dos pedidos.
+        columns:
+          - name: shipment_id
+            description: Identificador da remessa.
+            data_tests:
+              - not_null
+
+      - name: inventory_movements
+        description: Movimentações do livro-razão de estoque.
+        columns:
+          - name: movement_id
+            description: Identificador da movimentação.
+            data_tests:
+              - not_null
