@@ -1,0 +1,5 @@
+.venv/
+.dlt/secrets.toml
+*.duckdb
+__pycache__/
+.dlt/pipelines/

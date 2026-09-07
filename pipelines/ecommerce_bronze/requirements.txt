@@ -1,0 +1,1 @@
+dlt[snowflake,sql-database]>=1.30.0
