@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: stg_order_items
+    description: Itens vendidos no grão de pedido e variante, com snapshots comerciais.
+    columns:
+      - name: order_id
+        description: Identificador do pedido.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_orders')
+                field: order_id
+
+      - name: variant_id
+        description: Identificador da variante vendida.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_product_variants')
+                field: variant_id
+
+      - name: product_name
+        description: Snapshot do nome do produto no momento da venda.
+
+      - name: sku
+        description: Snapshot do SKU no momento da venda.
+
+      - name: unit_price
+        description: Preço unitário não negativo.
+
+      - name: qty
+        description: Quantidade positiva vendida.
+
+      - name: discount
+        description: Fração de desconto entre zero e um.
+
+      - name: line_total
+        description: Total não negativo da linha após desconto.
