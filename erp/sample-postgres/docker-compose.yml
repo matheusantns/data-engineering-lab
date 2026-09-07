@@ -1,0 +1,37 @@
+# Sample Postgres (ecommerce) — source DB for Airbyte / ETL labs.
+# Prefer:  ..\up.ps1   (Postgres + Airbyte via abctl)
+# Only DB: docker compose up -d
+#
+# Airbyte UI: http://localhost:8000
+# Postgres source in Airbyte connector:
+#   Host: host.docker.internal  Port: 5433
+#   Database: ecommerce  User/Pass: airbyte/airbyte  SSL: disable
+
+services:
+  sample-postgres:
+    image: postgres:16-alpine
+    container_name: sample-postgres
+    environment:
+      POSTGRES_USER: airbyte
+      POSTGRES_PASSWORD: airbyte
+      POSTGRES_DB: ecommerce
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d:ro
+      - sample_postgres_data:/var/lib/postgresql/data
+    networks:
+      - data-lab
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U airbyte -d ecommerce"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+networks:
+  data-lab:
+    name: data-lab
+
+volumes:
+  sample_postgres_data:
