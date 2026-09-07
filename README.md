@@ -4,6 +4,8 @@ Projeto de aprendizado e experimentação com tecnologias de engenharia, anális
 
 O objetivo é construir uma plataforma de dados de ponta a ponta, explorando diferentes ferramentas e arquiteturas: da ingestão e transformação até a visualização em BI e o consumo por agentes de inteligência artificial.
 
+O projeto também está sendo estruturado com o apoio de inteligência artificial, utilizada para acelerar o processo de aprendizado, auxiliar na pesquisa de tecnologias e apoiar o planejamento, a implementação e a documentação das soluções.
+
 > Este repositório está em desenvolvimento. Tecnologias, arquitetura e escopo poderão evoluir conforme novos estudos e experimentos forem realizados.
 
 ## Objetivos
