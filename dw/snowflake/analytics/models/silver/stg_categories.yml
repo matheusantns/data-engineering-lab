@@ -1,0 +1,37 @@
+version: 2
+
+models:
+  - name: stg_categories
+    description: Categorias operacionais normalizadas para consumo analítico.
+    columns:
+      - name: category_id
+        description: Identificador da categoria.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: parent_category_id
+        description: Identificador da categoria pai, quando existente.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_categories')
+                field: category_id
+
+      - name: name
+        description: Nome da categoria.
+
+      - name: slug
+        description: Identificador textual da categoria.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: description
+        description: Descrição da categoria, quando informada.
+
+      - name: created_at_utc
+        description: Data e hora de criação normalizada para UTC.
+
+      - name: updated_at_utc
+        description: Data e hora da última atualização normalizada para UTC.
