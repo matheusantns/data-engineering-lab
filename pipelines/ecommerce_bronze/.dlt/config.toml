@@ -1,5 +1,2 @@
-[sources.sql_database]
-table = "<configure me>" # fill this in!
-
 [runtime]
 dlthub_telemetry = true
