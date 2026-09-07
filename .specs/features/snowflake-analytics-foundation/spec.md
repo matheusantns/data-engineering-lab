@@ -7,7 +7,7 @@ A carga do e-commerce já entrega 16 tabelas no schema `DATA_LAB.BRONZE`, mas ai
 ## Goals
 
 - [ ] Versionar toda a lógica de infraestrutura e transformação do Snowflake sem armazenar segredos.
-- [ ] Disponibilizar uma Silver source-conformed para as 16 tabelas Bronze.
+- [x] Disponibilizar uma Silver source-conformed para as 16 tabelas Bronze.
 - [ ] Disponibilizar uma Gold dimensional de vendas com métricas financeiras não ambíguas.
 - [ ] Permitir uma execução manual diária, repetível e validada por testes.
 - [ ] Entregar um plano detalhado para implementação humana.
@@ -157,10 +157,10 @@ Every ambiguity is resolved or recorded here.
 | REPO-01 | Código Snowflake versionado e seguro | Tasks | In Progress (T1, T4, T11 complete) |
 | SEC-01 | Código Snowflake versionado e seguro | Tasks | In Progress (T1 complete) |
 | SEC-02 | Código Snowflake versionado e seguro | Tasks | In Tasks |
-| SILVER-01 | Silver source-conformed | Tasks | In Progress (T4, T11, T12, T22-T28 complete) |
+| SILVER-01 | Silver source-conformed | Tasks | Complete (T4, T11-T29) |
 | SILVER-02 | Silver source-conformed | Tasks | In Tasks |
-| SILVER-03 | Silver source-conformed | Tasks | In Progress (T22-T26, T28 complete) |
-| SILVER-04 | Silver source-conformed | Tasks | In Progress (T27 complete) |
+| SILVER-03 | Silver source-conformed | Tasks | Complete (T14-T29) |
+| SILVER-04 | Silver source-conformed | Tasks | Complete (T27) |
 | GOLD-01 | Gold dimensional de vendas | Tasks | In Progress (T4, T11, T12 complete) |
 | GOLD-02 | Gold dimensional de vendas | Tasks | In Tasks |
 | GOLD-03 | Gold dimensional de vendas | Tasks | In Tasks |
@@ -168,7 +168,7 @@ Every ambiguity is resolved or recorded here.
 | GOLD-05 | Gold dimensional de vendas | Tasks | In Tasks |
 | GOLD-06 | Gold dimensional de vendas | Tasks | In Tasks |
 | GOLD-07 | Gold dimensional de vendas | Tasks | In Tasks |
-| QUALITY-01 | Silver source-conformed | Tasks | In Progress (T22-T28 complete) |
+| QUALITY-01 | Silver source-conformed | Tasks | Complete (T13-T29) |
 | QUALITY-02 | Gold dimensional de vendas | Tasks | In Tasks |
 | QUALITY-03 | Gold dimensional de vendas | Tasks | In Tasks |
 | OPS-01 | Operação manual diária | Tasks | In Tasks |
@@ -181,7 +181,7 @@ Every ambiguity is resolved or recorded here.
 ## Success Criteria
 
 - [ ] Um clone limpo contém todo o código necessário e nenhum segredo.
-- [ ] As 16 tabelas Bronze possuem uma view Silver correspondente.
+- [x] As 16 tabelas Bronze possuem uma view Silver correspondente.
 - [ ] `password_hash` deixa de ser extraído e não existe na Silver ou Gold.
 - [ ] A Gold contém três dimensões e duas fatos com grãos testados.
 - [ ] As cinco métricas de vendas reconciliam com Silver por moeda.

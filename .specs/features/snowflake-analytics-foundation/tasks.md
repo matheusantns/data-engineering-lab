@@ -554,10 +554,10 @@ T40 -> T41 -> T42
 **Requirement**: SILVER-01, SILVER-03, QUALITY-01
 **Tools**: dbt Core.
 **Done when**:
-- [ ] `movement_id` é único e não nulo.
-- [ ] Variant e order opcional têm relacionamentos válidos.
-- [ ] Delta nunca é zero e reason é aceito.
-- [ ] O build completo da Silver passa com 16 views.
+- [x] `movement_id` é único e não nulo.
+- [x] Variant e order opcional têm relacionamentos válidos.
+- [x] Delta nunca é zero e reason é aceito.
+- [x] O build completo da Silver passa com 16 views.
 **Tests**: data + integration
 **Gate**: Full
 **Commit**: `feat(silver): model inventory movements`

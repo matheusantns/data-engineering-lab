@@ -1,0 +1,45 @@
+version: 2
+
+models:
+  - name: stg_inventory_movements
+    description: Ledger de movimentos de estoque por variante.
+    columns:
+      - name: movement_id
+        description: Identificador do movimento.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: variant_id
+        description: Identificador da variante movimentada.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_product_variants')
+                field: variant_id
+
+      - name: quantity_delta
+        description: Variação positiva ou negativa, nunca zero.
+
+      - name: reason
+        description: Motivo operacional do movimento.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - restock
+                  - sale
+                  - return
+                  - adjustment
+
+      - name: order_id
+        description: Pedido opcional relacionado ao movimento.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_orders')
+                field: order_id
+
+      - name: created_at_utc
+        description: Data e hora de criação normalizada para UTC.
