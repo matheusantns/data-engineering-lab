@@ -262,10 +262,10 @@ T40 -> T41 -> T42
 **Requirement**: SILVER-01, GOLD-01
 **Tools**: dbt Core.
 **Done when**:
-- [ ] Target `prod` compila modelos para `SILVER` ou `GOLD`.
-- [ ] Target não-prod compila para o schema padrão do profile.
-- [ ] O macro nunca retorna schema nulo.
-- [ ] `dbt parse --warn-error` passa.
+- [x] Target `prod` compila modelos para `SILVER` ou `GOLD`.
+- [x] Target não-prod compila para o schema padrão do profile.
+- [x] O macro nunca retorna schema nulo.
+- [x] `dbt parse --warn-error` passa.
 **Tests**: dbt macro unit/static test
 **Gate**: Static
 **Commit**: `feat(dbt): add environment aware schema naming`
@@ -279,9 +279,9 @@ T40 -> T41 -> T42
 **Requirement**: SILVER-01, QUALITY-01
 **Tools**: dbt Core, Snowflake.
 **Done when**:
-- [ ] Todas as 16 tabelas estão declaradas uma vez.
-- [ ] Database e schema resolvem para `DATA_LAB.BRONZE`.
-- [ ] `dbt ls --resource-type source` lista 16 fontes e `dbt parse --warn-error` passa.
+- [x] Todas as 16 tabelas estão declaradas uma vez.
+- [x] Database e schema resolvem para `DATA_LAB.BRONZE`.
+- [x] `dbt ls --resource-type source` lista 16 fontes e `dbt parse --warn-error` passa.
 **Tests**: source integration tests
 **Gate**: Focused
 **Commit**: `feat(dbt): declare ecommerce bronze sources`
@@ -297,10 +297,10 @@ T40 -> T41 -> T42
 **Requirement**: SILVER-01, SILVER-02, QUALITY-01
 **Tools**: dbt Core.
 **Done when**:
-- [ ] `user_id` é único e não nulo.
-- [ ] Timestamps usam UTC.
-- [ ] `password_hash` não compila no modelo.
-- [ ] O build focado passa.
+- [x] `user_id` é único e não nulo.
+- [x] Timestamps usam UTC.
+- [x] `password_hash` não compila no modelo.
+- [x] O build focado passa.
 **Tests**: data + integration
 **Gate**: Focused
 **Commit**: `feat(silver): model users`
@@ -433,10 +433,10 @@ T40 -> T41 -> T42
 **Requirement**: SILVER-01, SILVER-03, QUALITY-01
 **Tools**: dbt Core.
 **Done when**:
-- [ ] `cart_id` e session token são únicos e não nulos.
-- [ ] User opcional referencia usuários.
-- [ ] Status aceita somente `active`, `converted`, `abandoned`.
-- [ ] O build focado passa.
+- [x] `cart_id` e session token são únicos e não nulos.
+- [x] User opcional referencia usuários.
+- [x] Status aceita somente `active`, `converted`, `abandoned`.
+- [x] O build focado passa.
 **Tests**: data + integration
 **Gate**: Focused
 **Commit**: `feat(silver): model carts`
