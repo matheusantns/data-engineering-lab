@@ -1,0 +1,63 @@
+version: 2
+
+models:
+  - name: stg_orders
+    description: Pedidos operacionais com valores e snapshots de entrega preservados.
+    columns:
+      - name: order_id
+        description: Identificador do pedido.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: user_id
+        description: Identificador do usuário que realizou o pedido.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_users')
+                field: user_id
+
+      - name: order_number
+        description: Número comercial único do pedido.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: status
+        description: Estado operacional do pedido.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - pending
+                  - paid
+                  - processing
+                  - shipped
+                  - delivered
+                  - cancelled
+
+      - name: currency
+        description: Código da moeda dos valores do pedido.
+
+      - name: subtotal
+        description: Subtotal não negativo antes de desconto e frete.
+
+      - name: discount_total
+        description: Desconto total não negativo.
+
+      - name: shipping_total
+        description: Frete total não negativo.
+
+      - name: grand_total
+        description: Total final não negativo.
+
+      - name: ordered_at_utc
+        description: Data e hora do pedido normalizada para UTC.
+
+      - name: created_at_utc
+        description: Data e hora de criação normalizada para UTC.
+
+      - name: updated_at_utc
+        description: Data e hora da última atualização normalizada para UTC.

@@ -1,0 +1,20 @@
+select
+    order_id,
+    user_id,
+    order_number,
+    status,
+    currency,
+    subtotal,
+    discount_total,
+    shipping_total,
+    grand_total,
+    ship_name,
+    ship_line1,
+    ship_city,
+    ship_region,
+    ship_postal_code,
+    ship_country_code,
+    convert_timezone('UTC', ordered_at) as ordered_at_utc,
+    convert_timezone('UTC', created_at) as created_at_utc,
+    convert_timezone('UTC', updated_at) as updated_at_utc
+from {{ source('ecommerce', 'orders') }}
