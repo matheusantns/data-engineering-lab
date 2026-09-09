@@ -170,7 +170,7 @@ Every ambiguity is resolved or recorded here.
 | GOLD-07 | Gold dimensional de vendas | Tasks | In Progress (T33-T34 complete) |
 | QUALITY-01 | Silver source-conformed | Tasks | Complete (T13-T29) |
 | QUALITY-02 | Gold dimensional de vendas | Tasks | Complete (T30-T34) |
-| QUALITY-03 | Gold dimensional de vendas | Tasks | In Progress (T35 complete) |
+| QUALITY-03 | Gold dimensional de vendas | Tasks | In Progress (T35-T36 complete) |
 | OPS-01 | Operação manual diária | Tasks | In Tasks |
 | OPS-02 | Operação manual diária | Tasks | In Tasks |
 | OPS-03 | Operação manual diária | Tasks | In Tasks |

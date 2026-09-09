@@ -677,9 +677,9 @@ T40 -> T41 -> T42
 **Requirement**: QUALITY-03
 **Tools**: dbt Core.
 **Done when**:
-- [ ] Dataset válido retorna zero linhas.
-- [ ] Fixture mutante com line total incorreto faz o teste falhar.
-- [ ] Tolerância monetária está documentada e testada.
+- [x] Dataset válido retorna zero linhas.
+- [x] Fixture mutante com line total incorreto faz o teste falhar.
+- [x] Tolerância monetária está documentada e testada.
 **Tests**: data + mutation check
 **Gate**: Focused
 **Commit**: `test(dbt): reconcile order item totals`
