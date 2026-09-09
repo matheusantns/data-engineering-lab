@@ -161,15 +161,15 @@ Every ambiguity is resolved or recorded here.
 | SILVER-02 | Silver source-conformed | Tasks | In Tasks |
 | SILVER-03 | Silver source-conformed | Tasks | Complete (T14-T29) |
 | SILVER-04 | Silver source-conformed | Tasks | Complete (T27) |
-| GOLD-01 | Gold dimensional de vendas | Tasks | In Progress (T4, T11, T12 complete) |
+| GOLD-01 | Gold dimensional de vendas | Tasks | In Progress (T4, T11, T12, T30 complete) |
 | GOLD-02 | Gold dimensional de vendas | Tasks | In Tasks |
-| GOLD-03 | Gold dimensional de vendas | Tasks | In Tasks |
+| GOLD-03 | Gold dimensional de vendas | Tasks | In Progress (T30 complete) |
 | GOLD-04 | Gold dimensional de vendas | Tasks | In Tasks |
 | GOLD-05 | Gold dimensional de vendas | Tasks | In Tasks |
 | GOLD-06 | Gold dimensional de vendas | Tasks | In Tasks |
 | GOLD-07 | Gold dimensional de vendas | Tasks | In Tasks |
 | QUALITY-01 | Silver source-conformed | Tasks | Complete (T13-T29) |
-| QUALITY-02 | Gold dimensional de vendas | Tasks | In Tasks |
+| QUALITY-02 | Gold dimensional de vendas | Tasks | In Progress (T30 complete) |
 | QUALITY-03 | Gold dimensional de vendas | Tasks | In Tasks |
 | OPS-01 | Operação manual diária | Tasks | In Tasks |
 | OPS-02 | Operação manual diária | Tasks | In Tasks |

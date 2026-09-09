@@ -573,10 +573,10 @@ T40 -> T41 -> T42
 **Requirement**: GOLD-01, GOLD-03, QUALITY-02
 **Tools**: dbt Core.
 **Done when**:
-- [ ] `date_key` é inteiro `YYYYMMDD`, único e não nulo.
-- [ ] Dia, semana, mês, trimestre e ano estão corretos nas fixtures.
-- [ ] Bronze vazia produz dimensão vazia válida.
-- [ ] O build focado passa.
+- [x] `date_key` é inteiro `YYYYMMDD`, único e não nulo.
+- [x] Dia, semana, mês, trimestre e ano estão corretos nas fixtures.
+- [x] Bronze vazia produz dimensão vazia válida.
+- [x] O build focado passa.
 **Tests**: unit + data + integration
 **Gate**: Focused
 **Commit**: `feat(gold): add date dimension`
