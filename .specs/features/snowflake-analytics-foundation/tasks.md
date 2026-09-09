@@ -709,9 +709,9 @@ T40 -> T41 -> T42
 **Requirement**: GOLD-07, QUALITY-03
 **Tools**: dbt Core.
 **Done when**:
-- [ ] Código nulo ou fora do formato ISO de três letras falha.
-- [ ] Fixture com USD e EUR permanece em grupos distintos.
-- [ ] Nenhum total financeiro remove a moeda do grão.
+- [x] Código nulo ou fora do formato ISO de três letras falha.
+- [x] Fixture com USD e EUR permanece em grupos distintos.
+- [x] Nenhum total financeiro remove a moeda do grão.
 **Tests**: data + mutation check
 **Gate**: Focused
 **Commit**: `test(dbt): enforce currency boundaries`
