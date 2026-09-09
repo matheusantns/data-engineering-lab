@@ -1,0 +1,189 @@
+{
+  "schema": 1,
+  "promote_threshold": 2,
+  "window_days": 45,
+  "quarantine_threshold": 2,
+  "next_id": 11,
+  "lessons": [
+    {
+      "id": "L-001",
+      "key": "ac_gap::assert the complete versioned infrastructure asset inventory in a clean clone test",
+      "text": "Assert the complete versioned infrastructure asset inventory in a clean-clone test",
+      "signal": "ac_gap",
+      "scope": "repo",
+      "status": "candidate",
+      "features": [
+        "snowflake-analytics-foundation"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md:35-36 REPO-AC1 (repo)"
+      ],
+      "created": "2026-09-09T04:09:37Z",
+      "last_seen": "2026-09-09T04:09:37Z"
+    },
+    {
+      "id": "L-002",
+      "key": "ac_gap::scan tracked files for credential material and assert that no secret bearing file is versioned",
+      "text": "Scan tracked files for credential material and assert that no secret-bearing file is versioned",
+      "signal": "ac_gap",
+      "scope": "security",
+      "status": "candidate",
+      "features": [
+        "snowflake-analytics-foundation"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md:37-38 REPO-AC2 (security)"
+      ],
+      "created": "2026-09-09T04:09:37Z",
+      "last_seen": "2026-09-09T04:09:37Z"
+    },
+    {
+      "id": "L-003",
+      "key": "ac_gap::execute every bootstrap script twice and assert the resulting warehouse state is unchanged",
+      "text": "Execute every bootstrap script twice and assert the resulting warehouse state is unchanged",
+      "signal": "ac_gap",
+      "scope": "bootstrap",
+      "status": "candidate",
+      "features": [
+        "snowflake-analytics-foundation"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md:38-39 REPO-AC3 (bootstrap)"
+      ],
+      "created": "2026-09-09T04:09:38Z",
+      "last_seen": "2026-09-09T04:09:38Z"
+    },
+    {
+      "id": "L-004",
+      "key": "ac_gap::query and assert the loader role has exactly the required bronze privileges",
+      "text": "Query and assert the loader role has exactly the required Bronze privileges",
+      "signal": "ac_gap",
+      "scope": "bootstrap",
+      "status": "candidate",
+      "features": [
+        "snowflake-analytics-foundation"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md:39-40 REPO-AC4 (bootstrap)"
+      ],
+      "created": "2026-09-09T04:09:38Z",
+      "last_seen": "2026-09-09T04:09:38Z"
+    },
+    {
+      "id": "L-005",
+      "key": "ac_gap::query and assert the transformer role is confined to bronze read and silver or gold writes",
+      "text": "Query and assert the transformer role is confined to Bronze read and Silver or Gold writes",
+      "signal": "ac_gap",
+      "scope": "bootstrap",
+      "status": "candidate",
+      "features": [
+        "snowflake-analytics-foundation"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md:40-41 REPO-AC5 (bootstrap)"
+      ],
+      "created": "2026-09-09T04:09:38Z",
+      "last_seen": "2026-09-09T04:09:38Z"
+    },
+    {
+      "id": "L-006",
+      "key": "ac_gap::assert local pii and credential configuration paths are ignored by git",
+      "text": "Assert local PII and credential configuration paths are ignored by Git",
+      "signal": "ac_gap",
+      "scope": "security",
+      "status": "candidate",
+      "features": [
+        "snowflake-analytics-foundation"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md:41-42 REPO-AC6 (security)"
+      ],
+      "created": "2026-09-09T04:09:38Z",
+      "last_seen": "2026-09-09T04:09:38Z"
+    },
+    {
+      "id": "L-007",
+      "key": "ac_gap::assert sensitive source columns are excluded by extraction code and absent after loading",
+      "text": "Assert sensitive source columns are excluded by extraction code and absent after loading",
+      "signal": "ac_gap",
+      "scope": "extraction",
+      "status": "candidate",
+      "features": [
+        "snowflake-analytics-foundation"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md:48-49 SILVER-AC3 (extraction)"
+      ],
+      "created": "2026-09-09T04:09:38Z",
+      "last_seen": "2026-09-09T04:09:38Z"
+    },
+    {
+      "id": "L-008",
+      "key": "ac_gap::persist before and after aggregate snapshots and assert exact equality for idempotency gates",
+      "text": "Persist before and after aggregate snapshots and assert exact equality for idempotency gates",
+      "signal": "ac_gap",
+      "scope": "ops",
+      "status": "candidate",
+      "features": [
+        "snowflake-analytics-foundation"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md:84-85 OPS-AC5 (ops)"
+      ],
+      "created": "2026-09-09T04:09:39Z",
+      "last_seen": "2026-09-09T04:09:39Z"
+    },
+    {
+      "id": "L-009",
+      "key": "ac_gap::smoke test every required runbook section and its executable command path",
+      "text": "Smoke-test every required runbook section and its executable command path",
+      "signal": "ac_gap",
+      "scope": "docs",
+      "status": "candidate",
+      "features": [
+        "snowflake-analytics-foundation"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md:86-87 OPS-AC7 (docs)"
+      ],
+      "created": "2026-09-09T04:09:39Z",
+      "last_seen": "2026-09-09T04:09:39Z"
+    },
+    {
+      "id": "L-010",
+      "key": "ac_gap::validate currency codes against an explicit supported allowlist rather than syntax alone",
+      "text": "Validate currency codes against an explicit supported allowlist rather than syntax alone",
+      "signal": "ac_gap",
+      "scope": "data-quality",
+      "status": "candidate",
+      "features": [
+        "snowflake-analytics-foundation"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md:100-102 currency edge case (data-quality)"
+      ],
+      "created": "2026-09-09T04:09:39Z",
+      "last_seen": "2026-09-09T04:09:39Z"
+    }
+  ]
+}
