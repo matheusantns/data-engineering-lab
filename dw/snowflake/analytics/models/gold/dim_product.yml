@@ -1,0 +1,114 @@
+version: 2
+
+models:
+  - name: dim_product
+    description: Estado atual dos produtos no grão de variante comercializável.
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: product_key
+        description: Chave dimensional derivada do identificador da variante.
+        data_type: number(19, 0)
+        data_tests:
+          - not_null
+          - unique
+
+      - name: product_id
+        description: Identificador do produto ao qual a variante pertence.
+        data_type: number(19, 0)
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_products')
+                field: product_id
+
+      - name: sku
+        description: Código comercial da variante.
+        data_type: varchar
+        data_tests:
+          - not_null
+          - unique
+
+      - name: product_name
+        description: Nome atual do produto.
+        data_type: varchar
+
+      - name: variant_name
+        description: Nome atual da variante.
+        data_type: varchar
+
+      - name: category_id
+        description: Identificador da categoria direta do produto.
+        data_type: number(19, 0)
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_categories')
+                field: category_id
+
+      - name: category_name
+        description: Nome atual da categoria direta.
+        data_type: varchar
+
+      - name: list_price
+        description: Preço de catálogo atual da variante.
+        data_type: number(12, 2)
+        data_tests:
+          - not_null
+
+      - name: currency
+        description: Código da moeda do preço de catálogo.
+        data_type: varchar
+        data_tests:
+          - not_null
+
+      - name: product_is_active
+        description: Estado ativo atual do produto.
+        data_type: boolean
+        data_tests:
+          - not_null
+
+      - name: variant_is_active
+        description: Estado ativo atual da variante.
+        data_type: boolean
+        data_tests:
+          - not_null
+
+unit_tests:
+  - name: dim_product_joins_current_variant_product_and_category
+    description: Preserva uma linha por variante com produto, categoria direta, preço, moeda e estados atuais.
+    model: dim_product
+    given:
+      - input: ref('stg_product_variants')
+        rows:
+          - {variant_id: 1000, product_id: 100, sku: CAM-BLK, name: Black, price: 1299.90, currency: USD, is_active: true}
+          - {variant_id: 1001, product_id: 100, sku: CAM-SLV, name: Silver, price: 1349.90, currency: USD, is_active: false}
+          - {variant_id: 2000, product_id: 200, sku: NOV-HC, name: Hardcover, price: 39.90, currency: BRL, is_active: true}
+      - input: ref('stg_products')
+        rows:
+          - {product_id: 100, category_id: 10, name: Camera, is_active: true}
+          - {product_id: 200, category_id: 20, name: Novel, is_active: false}
+      - input: ref('stg_categories')
+        rows:
+          - {category_id: 10, name: Electronics}
+          - {category_id: 20, name: Books}
+    expect:
+      rows:
+        - {product_key: 1000, product_id: 100, sku: CAM-BLK, product_name: Camera, variant_name: Black, category_id: 10, category_name: Electronics, list_price: 1299.90, currency: USD, product_is_active: true, variant_is_active: true}
+        - {product_key: 1001, product_id: 100, sku: CAM-SLV, product_name: Camera, variant_name: Silver, category_id: 10, category_name: Electronics, list_price: 1349.90, currency: USD, product_is_active: true, variant_is_active: false}
+        - {product_key: 2000, product_id: 200, sku: NOV-HC, product_name: Novel, variant_name: Hardcover, category_id: 20, category_name: Books, list_price: 39.90, currency: BRL, product_is_active: false, variant_is_active: true}
+
+  - name: dim_product_is_empty_without_variants
+    description: Não fabrica produtos quando não existem variantes.
+    model: dim_product
+    given:
+      - input: ref('stg_product_variants')
+        rows: []
+      - input: ref('stg_products')
+        rows: []
+      - input: ref('stg_categories')
+        rows: []
+    expect:
+      rows: []

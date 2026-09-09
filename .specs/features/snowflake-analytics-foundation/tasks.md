@@ -607,10 +607,10 @@ T40 -> T41 -> T42
 **Requirement**: GOLD-01, GOLD-05, QUALITY-02
 **Tools**: dbt Core.
 **Done when**:
-- [ ] Uma linha existe por `variant_id`.
-- [ ] Produto, variante e categoria direta estão corretos.
-- [ ] Preço, moeda e flags atuais seguem Tipo 1.
-- [ ] O build focado passa.
+- [x] Uma linha existe por `variant_id`.
+- [x] Produto, variante e categoria direta estão corretos.
+- [x] Preço, moeda e flags atuais seguem Tipo 1.
+- [x] O build focado passa.
 **Tests**: unit + data + integration
 **Gate**: Focused
 **Commit**: `feat(gold): add product dimension`
