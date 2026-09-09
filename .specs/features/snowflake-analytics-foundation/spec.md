@@ -171,9 +171,9 @@ Every ambiguity is resolved or recorded here.
 | QUALITY-01 | Silver source-conformed | Tasks | Complete (T13-T29) |
 | QUALITY-02 | Gold dimensional de vendas | Tasks | Complete (T30-T34) |
 | QUALITY-03 | Gold dimensional de vendas | Tasks | In Progress (T35-T38 complete) |
-| OPS-01 | Operação manual diária | Tasks | In Tasks |
-| OPS-02 | Operação manual diária | Tasks | In Tasks |
-| OPS-03 | Operação manual diária | Tasks | In Tasks |
+| OPS-01 | Operação manual diária | Tasks | In Progress (T40 complete) |
+| OPS-02 | Operação manual diária | Tasks | In Progress (T40 complete) |
+| OPS-03 | Operação manual diária | Tasks | Complete (T40) |
 | OPS-04 | Operação manual diária | Tasks | In Tasks |
 
 **Coverage:** 21 requirements, 21 mapped to tasks, 0 unmapped.

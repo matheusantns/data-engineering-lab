@@ -743,12 +743,12 @@ T40 -> T41 -> T42
 **Requirement**: OPS-01, OPS-02, OPS-03
 **Tools**: PowerShell, Python, dbt Core.
 **Done when**:
-- [ ] Happy path executa Bronze antes do dbt.
-- [ ] Falha Bronze impede dbt.
-- [ ] Falha dbt retorna código não zero.
-- [ ] Segunda execução simultânea é recusada.
-- [ ] Lock é removido no sucesso e na falha.
-- [ ] `SkipExtract` executa somente dbt.
+- [x] Happy path executa Bronze antes do dbt.
+- [x] Falha Bronze impede dbt.
+- [x] Falha dbt retorna código não zero.
+- [x] Segunda execução simultânea é recusada.
+- [x] Lock é removido no sucesso e na falha.
+- [x] `SkipExtract` executa somente dbt.
 **Tests**: integration runner scenarios
 **Gate**: Full
 **Commit**: `feat(ops): add manual daily pipeline runner`
