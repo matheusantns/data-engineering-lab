@@ -661,9 +661,9 @@ T40 -> T41 -> T42
 **Requirement**: QUALITY-03
 **Tools**: dbt Core.
 **Done when**:
-- [ ] Dataset válido retorna zero linhas.
-- [ ] Fixture mutante com total incorreto faz o teste falhar.
-- [ ] O teste usa precisão monetária explícita.
+- [x] Dataset válido retorna zero linhas.
+- [x] Fixture mutante com total incorreto faz o teste falhar.
+- [x] O teste usa precisão monetária explícita.
 **Tests**: data + mutation check
 **Gate**: Focused
 **Commit**: `test(dbt): reconcile order totals`
