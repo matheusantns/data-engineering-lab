@@ -590,10 +590,10 @@ T40 -> T41 -> T42
 **Requirement**: GOLD-01, GOLD-04, SEC-01, QUALITY-02
 **Tools**: dbt Core.
 **Done when**:
-- [ ] Uma linha existe por `user_id`.
-- [ ] Estado ativo, criação e exclusão estão corretos.
-- [ ] Nome, empresa, e-mail, telefone e endereço não existem.
-- [ ] O build focado passa.
+- [x] Uma linha existe por `user_id`.
+- [x] Estado ativo, criação e exclusão estão corretos.
+- [x] Nome, empresa, e-mail, telefone e endereço não existem.
+- [x] O build focado passa.
 **Tests**: unit + data + integration
 **Gate**: Focused
 **Commit**: `feat(gold): add customer dimension`

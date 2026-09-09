@@ -1,0 +1,58 @@
+version: 2
+
+models:
+  - name: dim_customer
+    description: Estado atual dos clientes sem atributos de identificação direta.
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: customer_key
+        description: Chave do cliente derivada do identificador operacional.
+        data_type: number(38, 0)
+        data_tests:
+          - not_null
+          - unique
+
+      - name: is_active
+        description: Estado ativo atual do cadastro.
+        data_type: boolean
+        data_tests:
+          - not_null
+
+      - name: created_at_utc
+        description: Data e hora de criação do cadastro em UTC.
+        data_type: timestamp_tz
+        data_tests:
+          - not_null
+
+      - name: is_deleted
+        description: Indica se o cadastro possui exclusão lógica.
+        data_type: boolean
+        data_tests:
+          - not_null
+
+unit_tests:
+  - name: dim_customer_keeps_current_non_pii_state
+    description: Preserva estado e criação e deriva exclusão sem transportar PII direta.
+    model: dim_customer
+    given:
+      - input: ref('stg_users')
+        rows:
+          - {user_id: 1, is_active: true, created_at_utc: '2026-01-10 14:00:00 +0000', deleted_at_utc: null}
+          - {user_id: 2, is_active: false, created_at_utc: '2026-02-11 15:00:00 +0000', deleted_at_utc: null}
+          - {user_id: 3, is_active: true, created_at_utc: '2026-03-12 16:00:00 +0000', deleted_at_utc: '2026-09-08 12:00:00 +0000'}
+    expect:
+      rows:
+        - {customer_key: 1, is_active: true, created_at_utc: '2026-01-10 14:00:00 +0000', is_deleted: false}
+        - {customer_key: 2, is_active: false, created_at_utc: '2026-02-11 15:00:00 +0000', is_deleted: false}
+        - {customer_key: 3, is_active: true, created_at_utc: '2026-03-12 16:00:00 +0000', is_deleted: true}
+
+  - name: dim_customer_is_empty_without_users
+    description: Não fabrica clientes quando a entrada está vazia.
+    model: dim_customer
+    given:
+      - input: ref('stg_users')
+        rows: []
+    expect:
+      rows: []

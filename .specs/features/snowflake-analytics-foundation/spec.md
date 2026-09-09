@@ -155,21 +155,21 @@ Every ambiguity is resolved or recorded here.
 | Requirement ID | Story | Phase | Status |
 | --- | --- | --- | --- |
 | REPO-01 | Código Snowflake versionado e seguro | Tasks | In Progress (T1, T4, T11 complete) |
-| SEC-01 | Código Snowflake versionado e seguro | Tasks | In Progress (T1 complete) |
+| SEC-01 | Código Snowflake versionado e seguro | Tasks | In Progress (T1, T31 complete) |
 | SEC-02 | Código Snowflake versionado e seguro | Tasks | In Tasks |
 | SILVER-01 | Silver source-conformed | Tasks | Complete (T4, T11-T29) |
 | SILVER-02 | Silver source-conformed | Tasks | In Tasks |
 | SILVER-03 | Silver source-conformed | Tasks | Complete (T14-T29) |
 | SILVER-04 | Silver source-conformed | Tasks | Complete (T27) |
-| GOLD-01 | Gold dimensional de vendas | Tasks | In Progress (T4, T11, T12, T30 complete) |
+| GOLD-01 | Gold dimensional de vendas | Tasks | In Progress (T4, T11, T12, T30, T31 complete) |
 | GOLD-02 | Gold dimensional de vendas | Tasks | In Tasks |
 | GOLD-03 | Gold dimensional de vendas | Tasks | In Progress (T30 complete) |
-| GOLD-04 | Gold dimensional de vendas | Tasks | In Tasks |
+| GOLD-04 | Gold dimensional de vendas | Tasks | In Progress (T31 complete) |
 | GOLD-05 | Gold dimensional de vendas | Tasks | In Tasks |
 | GOLD-06 | Gold dimensional de vendas | Tasks | In Tasks |
 | GOLD-07 | Gold dimensional de vendas | Tasks | In Tasks |
 | QUALITY-01 | Silver source-conformed | Tasks | Complete (T13-T29) |
-| QUALITY-02 | Gold dimensional de vendas | Tasks | In Progress (T30 complete) |
+| QUALITY-02 | Gold dimensional de vendas | Tasks | In Progress (T30, T31 complete) |
 | QUALITY-03 | Gold dimensional de vendas | Tasks | In Tasks |
 | OPS-01 | Operação manual diária | Tasks | In Tasks |
 | OPS-02 | Operação manual diária | Tasks | In Tasks |
