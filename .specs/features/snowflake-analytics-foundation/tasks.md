@@ -725,9 +725,9 @@ T40 -> T41 -> T42
 **Requirement**: SEC-01, GOLD-04
 **Tools**: dbt Core, Snowflake.
 **Done when**:
-- [ ] Nome, e-mail, telefone, endereço e password hash são proibidos.
-- [ ] Uma coluna mutante proibida faz o teste falhar.
-- [ ] O build Gold completo passa com três dimensões e duas fatos.
+- [x] Nome, e-mail, telefone, endereço e password hash são proibidos.
+- [x] Uma coluna mutante proibida faz o teste falhar.
+- [x] O build Gold completo passa com três dimensões e duas fatos.
 **Tests**: data + mutation check
 **Gate**: Full
 **Commit**: `test(dbt): block direct pii in gold`
