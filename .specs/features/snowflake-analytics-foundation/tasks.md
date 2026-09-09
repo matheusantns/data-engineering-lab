@@ -762,10 +762,10 @@ T40 -> T41 -> T42
 **Requirement**: OPS-01, OPS-02, OPS-04
 **Tools**: Editor, terminal.
 **Done when**:
-- [ ] Um clone limpo chega a `dbt debug` sem instrução implícita.
-- [ ] O runbook diferencia comandos locais de mudanças remotas.
-- [ ] Falha de cada etapa possui diagnóstico e próximo comando seguro.
-- [ ] A política de não editar diretamente no Snowsight está explícita.
+- [x] Um clone limpo chega a `dbt debug` sem instrução implícita.
+- [x] O runbook diferencia comandos locais de mudanças remotas.
+- [x] Falha de cada etapa possui diagnóstico e próximo comando seguro.
+- [x] A política de não editar diretamente no Snowsight está explícita.
 **Tests**: documentation smoke test
 **Gate**: Full
 **Commit**: `docs(snowflake): add analytics operations runbook`
