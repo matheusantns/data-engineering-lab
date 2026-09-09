@@ -1,0 +1,125 @@
+version: 2
+
+models:
+  - name: fct_order_items
+    description: Itens vendidos no grão de pedido e variante, sem multiplicação por pagamentos.
+    config:
+      contract:
+        enforced: true
+    data_tests:
+      - unique:
+          arguments:
+            column_name: "concat(order_id::varchar, '-', product_key::varchar)"
+    columns:
+      - name: order_id
+        description: Identificador do pedido.
+        data_type: number(19, 0)
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('fct_orders')
+                field: order_id
+
+      - name: date_key
+        description: Chave da data UTC em que o pedido foi realizado.
+        data_type: number(38, 0)
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_key
+
+      - name: customer_key
+        description: Chave do cliente que realizou o pedido.
+        data_type: number(38, 0)
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_customer')
+                field: customer_key
+
+      - name: product_key
+        description: Chave da variante vendida.
+        data_type: number(19, 0)
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_product')
+                field: product_key
+
+      - name: status
+        description: Estado operacional atual do pedido.
+        data_type: varchar
+        data_tests:
+          - not_null
+
+      - name: currency
+        description: Código da moeda das medidas financeiras do item.
+        data_type: varchar
+        data_tests:
+          - not_null
+
+      - name: has_captured_payment
+        description: Indica se o pedido possui ao menos um pagamento capturado.
+        data_type: boolean
+        data_tests:
+          - not_null
+
+      - name: unit_price
+        description: Preço unitário registrado no momento da venda.
+        data_type: number(12, 2)
+        data_tests:
+          - not_null
+
+      - name: qty
+        description: Quantidade vendida da variante no pedido.
+        data_type: number(19, 0)
+        data_tests:
+          - not_null
+
+      - name: discount
+        description: Fração de desconto aplicada ao item.
+        data_type: number(4, 3)
+        data_tests:
+          - not_null
+
+      - name: line_total
+        description: Valor total da linha após desconto.
+        data_type: number(12, 2)
+        data_tests:
+          - not_null
+
+unit_tests:
+  - name: fct_order_items_preserves_items_with_aggregated_payments
+    description: Mantém uma linha por variante e as medidas originais quando o pedido possui múltiplas capturas.
+    model: fct_order_items
+    given:
+      - input: ref('stg_order_items')
+        rows:
+          - {order_id: 1, variant_id: 1000, unit_price: 10.00, qty: 2, discount: 0.100, line_total: 18.00}
+          - {order_id: 1, variant_id: 1001, unit_price: 25.00, qty: 3, discount: 0.000, line_total: 75.00}
+          - {order_id: 2, variant_id: 2000, unit_price: 40.00, qty: 1, discount: 0.250, line_total: 30.00}
+      - input: ref('fct_orders')
+        rows:
+          - {order_id: 1, date_key: 20260901, customer_key: 101, status: paid, currency: USD, captured_payment_count: 2}
+          - {order_id: 2, date_key: 20260902, customer_key: 102, status: pending, currency: BRL, captured_payment_count: 0}
+    expect:
+      rows:
+        - {order_id: 1, date_key: 20260901, customer_key: 101, product_key: 1000, status: paid, currency: USD, has_captured_payment: true, unit_price: 10.00, qty: 2, discount: 0.100, line_total: 18.00}
+        - {order_id: 1, date_key: 20260901, customer_key: 101, product_key: 1001, status: paid, currency: USD, has_captured_payment: true, unit_price: 25.00, qty: 3, discount: 0.000, line_total: 75.00}
+        - {order_id: 2, date_key: 20260902, customer_key: 102, product_key: 2000, status: pending, currency: BRL, has_captured_payment: false, unit_price: 40.00, qty: 1, discount: 0.250, line_total: 30.00}
+
+  - name: fct_order_items_is_empty_without_items
+    description: Não fabrica itens quando a entrada está vazia.
+    model: fct_order_items
+    given:
+      - input: ref('stg_order_items')
+        rows: []
+      - input: ref('fct_orders')
+        rows: []
+    expect:
+      rows: []

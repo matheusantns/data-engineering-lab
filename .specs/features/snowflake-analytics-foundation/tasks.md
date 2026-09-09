@@ -644,10 +644,10 @@ T40 -> T41 -> T42
 **Requirement**: GOLD-02, GOLD-06, GOLD-07, QUALITY-02
 **Tools**: dbt Core.
 **Done when**:
-- [ ] O grão `order_id, product_key` é único.
-- [ ] Múltiplos pagamentos não duplicam item nem quantidade.
-- [ ] Indicador de captura, moeda e medidas estão corretos nas fixtures.
-- [ ] O build focado passa.
+- [x] O grão `order_id, product_key` é único.
+- [x] Múltiplos pagamentos não duplicam item nem quantidade.
+- [x] Indicador de captura, moeda e medidas estão corretos nas fixtures.
+- [x] O build focado passa.
 **Tests**: unit + data + integration
 **Gate**: Focused
 **Commit**: `feat(gold): add order items fact`
