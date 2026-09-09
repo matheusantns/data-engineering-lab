@@ -626,11 +626,11 @@ T40 -> T41 -> T42
 **Requirement**: GOLD-02, GOLD-06, GOLD-07, QUALITY-02
 **Tools**: dbt Core.
 **Done when**:
-- [ ] Uma linha existe por pedido.
-- [ ] Fixtures cobrem captura, pendência, falha, refund, múltiplas capturas e ausência de pagamento.
-- [ ] Receita reconhecida e refund são somas condicionais por status.
-- [ ] Moeda permanece explícita.
-- [ ] O build focado passa.
+- [x] Uma linha existe por pedido.
+- [x] Fixtures cobrem captura, pendência, falha, refund, múltiplas capturas e ausência de pagamento.
+- [x] Receita reconhecida e refund são somas condicionais por status.
+- [x] Moeda permanece explícita.
+- [x] O build focado passa.
 **Tests**: unit + data + integration
 **Gate**: Focused
 **Commit**: `feat(gold): add orders fact`

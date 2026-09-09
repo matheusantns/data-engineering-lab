@@ -1,0 +1,149 @@
+version: 2
+
+models:
+  - name: fct_orders
+    description: Pedidos no grão transacional com pagamentos agregados antes do relacionamento.
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: order_id
+        description: Identificador do pedido e chave primária da fato.
+        data_type: number(19, 0)
+        data_tests:
+          - not_null
+          - unique
+
+      - name: date_key
+        description: Chave da data UTC em que o pedido foi realizado.
+        data_type: number(38, 0)
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_key
+
+      - name: customer_key
+        description: Chave do cliente que realizou o pedido.
+        data_type: number(38, 0)
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_customer')
+                field: customer_key
+
+      - name: order_number
+        description: Número comercial do pedido.
+        data_type: varchar
+        data_tests:
+          - not_null
+          - unique
+
+      - name: status
+        description: Estado operacional atual do pedido.
+        data_type: varchar
+        data_tests:
+          - not_null
+
+      - name: currency
+        description: Código da moeda de todas as medidas financeiras do pedido.
+        data_type: varchar
+        data_tests:
+          - not_null
+
+      - name: subtotal
+        description: Subtotal do pedido antes de desconto e frete.
+        data_type: number(12, 2)
+        data_tests:
+          - not_null
+
+      - name: discount_total
+        description: Desconto total aplicado ao pedido.
+        data_type: number(12, 2)
+        data_tests:
+          - not_null
+
+      - name: shipping_total
+        description: Frete total cobrado no pedido.
+        data_type: number(12, 2)
+        data_tests:
+          - not_null
+
+      - name: grand_total
+        description: Valor total final do pedido.
+        data_type: number(12, 2)
+        data_tests:
+          - not_null
+
+      - name: recognized_revenue
+        description: Soma dos pagamentos capturados para o pedido.
+        data_type: number(38, 2)
+        data_tests:
+          - not_null
+
+      - name: refunded_amount
+        description: Soma dos pagamentos reembolsados para o pedido.
+        data_type: number(38, 2)
+        data_tests:
+          - not_null
+
+      - name: payment_count
+        description: Quantidade total de pagamentos associados ao pedido.
+        data_type: number(18, 0)
+        data_tests:
+          - not_null
+
+      - name: captured_payment_count
+        description: Quantidade de pagamentos capturados associados ao pedido.
+        data_type: number(18, 0)
+        data_tests:
+          - not_null
+
+      - name: refunded_payment_count
+        description: Quantidade de pagamentos reembolsados associados ao pedido.
+        data_type: number(18, 0)
+        data_tests:
+          - not_null
+
+unit_tests:
+  - name: fct_orders_aggregates_payments_by_status
+    description: Calcula captura e reembolso sem excluir pedidos pendentes, falhos ou sem pagamento.
+    model: fct_orders
+    given:
+      - input: ref('stg_orders')
+        rows:
+          - {order_id: 1, user_id: 101, order_number: ORD-001, status: paid, currency: USD, subtotal: 100.00, discount_total: 0.00, shipping_total: 0.00, grand_total: 100.00, ordered_at_utc: '2026-09-01 10:00:00 +0000'}
+          - {order_id: 2, user_id: 102, order_number: ORD-002, status: pending, currency: USD, subtotal: 75.00, discount_total: 0.00, shipping_total: 0.00, grand_total: 75.00, ordered_at_utc: '2026-09-02 10:00:00 +0000'}
+          - {order_id: 3, user_id: 103, order_number: ORD-003, status: pending, currency: BRL, subtotal: 50.00, discount_total: 0.00, shipping_total: 0.00, grand_total: 50.00, ordered_at_utc: '2026-09-03 10:00:00 +0000'}
+          - {order_id: 4, user_id: 104, order_number: ORD-004, status: cancelled, currency: BRL, subtotal: 25.00, discount_total: 0.00, shipping_total: 0.00, grand_total: 25.00, ordered_at_utc: '2026-09-04 10:00:00 +0000'}
+          - {order_id: 5, user_id: 105, order_number: ORD-005, status: paid, currency: EUR, subtotal: 110.00, discount_total: 10.00, shipping_total: 0.00, grand_total: 100.00, ordered_at_utc: '2026-09-05 10:00:00 +0000'}
+          - {order_id: 6, user_id: 106, order_number: ORD-006, status: pending, currency: EUR, subtotal: 40.00, discount_total: 5.00, shipping_total: 5.00, grand_total: 40.00, ordered_at_utc: '2026-09-06 10:00:00 +0000'}
+      - input: ref('stg_payments')
+        rows:
+          - {payment_id: 11, order_id: 1, amount: 100.00, currency: USD, status: captured}
+          - {payment_id: 21, order_id: 2, amount: 75.00, currency: USD, status: pending}
+          - {payment_id: 31, order_id: 3, amount: 50.00, currency: BRL, status: failed}
+          - {payment_id: 41, order_id: 4, amount: 25.00, currency: BRL, status: refunded}
+          - {payment_id: 51, order_id: 5, amount: 40.00, currency: EUR, status: captured}
+          - {payment_id: 52, order_id: 5, amount: 60.00, currency: EUR, status: captured}
+    expect:
+      rows:
+        - {order_id: 1, date_key: 20260901, customer_key: 101, order_number: ORD-001, status: paid, currency: USD, subtotal: 100.00, discount_total: 0.00, shipping_total: 0.00, grand_total: 100.00, recognized_revenue: 100.00, refunded_amount: 0.00, payment_count: 1, captured_payment_count: 1, refunded_payment_count: 0}
+        - {order_id: 2, date_key: 20260902, customer_key: 102, order_number: ORD-002, status: pending, currency: USD, subtotal: 75.00, discount_total: 0.00, shipping_total: 0.00, grand_total: 75.00, recognized_revenue: 0.00, refunded_amount: 0.00, payment_count: 1, captured_payment_count: 0, refunded_payment_count: 0}
+        - {order_id: 3, date_key: 20260903, customer_key: 103, order_number: ORD-003, status: pending, currency: BRL, subtotal: 50.00, discount_total: 0.00, shipping_total: 0.00, grand_total: 50.00, recognized_revenue: 0.00, refunded_amount: 0.00, payment_count: 1, captured_payment_count: 0, refunded_payment_count: 0}
+        - {order_id: 4, date_key: 20260904, customer_key: 104, order_number: ORD-004, status: cancelled, currency: BRL, subtotal: 25.00, discount_total: 0.00, shipping_total: 0.00, grand_total: 25.00, recognized_revenue: 0.00, refunded_amount: 25.00, payment_count: 1, captured_payment_count: 0, refunded_payment_count: 1}
+        - {order_id: 5, date_key: 20260905, customer_key: 105, order_number: ORD-005, status: paid, currency: EUR, subtotal: 110.00, discount_total: 10.00, shipping_total: 0.00, grand_total: 100.00, recognized_revenue: 100.00, refunded_amount: 0.00, payment_count: 2, captured_payment_count: 2, refunded_payment_count: 0}
+        - {order_id: 6, date_key: 20260906, customer_key: 106, order_number: ORD-006, status: pending, currency: EUR, subtotal: 40.00, discount_total: 5.00, shipping_total: 5.00, grand_total: 40.00, recognized_revenue: 0.00, refunded_amount: 0.00, payment_count: 0, captured_payment_count: 0, refunded_payment_count: 0}
+
+  - name: fct_orders_is_empty_without_orders
+    description: Não fabrica pedidos quando a entrada está vazia.
+    model: fct_orders
+    given:
+      - input: ref('stg_orders')
+        rows: []
+      - input: ref('stg_payments')
+        rows: []
+    expect:
+      rows: []
