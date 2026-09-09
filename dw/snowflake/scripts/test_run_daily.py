@@ -7,6 +7,7 @@ from pathlib import Path
 
 
 SOURCE_RUNNER = Path(__file__).with_name("run_daily.ps1")
+SOURCE_DBT_PROJECT = SOURCE_RUNNER.parents[1] / "analytics" / "dbt_project.yml"
 POWERSHELL = shutil.which("pwsh") or shutil.which("powershell")
 
 
@@ -105,7 +106,10 @@ class RunDailyIntegrationTest(unittest.TestCase):
         self.assertIn("build", dbt_arguments)
         self.assertIn(f"--project-dir {self.analytics_dir}", dbt_arguments)
         self.assertIn(f"--profiles-dir {self.analytics_dir}", dbt_arguments)
-        self.assertIn("--warn-error", dbt_arguments)
+        self.assertNotIn("--warn-error", dbt_arguments)
+        dbt_project = SOURCE_DBT_PROJECT.read_text(encoding="utf-8")
+        self.assertIn("warn_error_options:", dbt_project)
+        self.assertIn("error: all", dbt_project)
         logs = self._run_logs()
         self.assertEqual(len(logs), 1)
         log = logs[0].read_text(encoding="utf-8")

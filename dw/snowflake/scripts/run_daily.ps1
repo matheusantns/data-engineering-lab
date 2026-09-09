@@ -102,8 +102,7 @@ try {
         -Arguments @(
             "build",
             "--project-dir", $analyticsDirectory,
-            "--profiles-dir", $analyticsDirectory,
-            "--warn-error"
+            "--profiles-dir", $analyticsDirectory
         )
     if ($exitCode -ne 0) {
         throw "dbt build failed"
