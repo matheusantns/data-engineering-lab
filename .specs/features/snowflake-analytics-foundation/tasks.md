@@ -779,12 +779,12 @@ T40 -> T41 -> T42
 **Requirement**: REPO-01, OPS-04
 **Tools**: Editor, dbt docs.
 **Done when**:
-- [ ] A página aponta para bootstrap, analytics e runbook.
-- [ ] As 16 relações Silver e cinco relações Gold estão listadas.
-- [ ] As cinco métricas possuem definição e grão.
-- [ ] Runner executado duas vezes produz as mesmas contagens e somas por moeda.
-- [ ] `dbt docs generate` passa.
-- [ ] Gate Final passa.
+- [x] A página aponta para bootstrap, analytics e runbook.
+- [x] As 16 relações Silver e cinco relações Gold estão listadas.
+- [x] As cinco métricas possuem definição e grão.
+- [x] Runner executado duas vezes produz as mesmas contagens e somas por moeda.
+- [x] `dbt docs generate` passa.
+- [x] Gate Final passa.
 **Tests**: documentation smoke + full integration + idempotency
 **Gate**: Final
 **Commit**: `docs(snowflake): document analytics foundation`

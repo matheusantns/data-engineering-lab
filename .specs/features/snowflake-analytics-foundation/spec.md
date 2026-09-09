@@ -154,7 +154,7 @@ Every ambiguity is resolved or recorded here.
 
 | Requirement ID | Story | Phase | Status |
 | --- | --- | --- | --- |
-| REPO-01 | Código Snowflake versionado e seguro | Tasks | In Progress (T1, T4, T11 complete) |
+| REPO-01 | Código Snowflake versionado e seguro | Tasks | Complete (T1, T4, T11, T42) |
 | SEC-01 | Código Snowflake versionado e seguro | Tasks | Complete (T1, T31, T39) |
 | SEC-02 | Código Snowflake versionado e seguro | Tasks | In Tasks |
 | SILVER-01 | Silver source-conformed | Tasks | Complete (T4, T11-T29) |
@@ -174,7 +174,7 @@ Every ambiguity is resolved or recorded here.
 | OPS-01 | Operação manual diária | Tasks | Complete (T40-T41) |
 | OPS-02 | Operação manual diária | Tasks | Complete (T40-T41) |
 | OPS-03 | Operação manual diária | Tasks | Complete (T40) |
-| OPS-04 | Operação manual diária | Tasks | In Progress (T41 complete) |
+| OPS-04 | Operação manual diária | Tasks | Complete (T41-T42) |
 
 **Coverage:** 21 requirements, 21 mapped to tasks, 0 unmapped.
 
