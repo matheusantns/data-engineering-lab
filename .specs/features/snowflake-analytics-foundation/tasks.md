@@ -693,9 +693,9 @@ T40 -> T41 -> T42
 **Requirement**: GOLD-06, QUALITY-03
 **Tools**: dbt Core.
 **Done when**:
-- [ ] Dataset válido retorna zero linhas.
-- [ ] Pendentes, falhos e refunded ficam fora do capturado.
-- [ ] Mutante que inclui refunded faz o teste falhar.
+- [x] Dataset válido retorna zero linhas.
+- [x] Pendentes, falhos e refunded ficam fora do capturado.
+- [x] Mutante que inclui refunded faz o teste falhar.
 **Tests**: data + mutation check
 **Gate**: Focused
 **Commit**: `test(dbt): reconcile captured revenue`
