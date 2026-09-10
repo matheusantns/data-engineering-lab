@@ -1,0 +1,30 @@
+# Code location image: ecommerce_analytics + bronze pipeline + dbt project.
+# Build context must be the repository root (see docker-compose.yml).
+# Health: HEALTHCHECK probes gRPC port 4000 (code-server).
+
+FROM python:3.12-slim
+
+WORKDIR /opt/dagster/app
+
+COPY orchestration/dagster/requirements.txt /opt/dagster/app/requirements.txt
+
+RUN pip install --no-cache-dir -r /opt/dagster/app/requirements.txt
+
+# Preserve repo-relative layout so Path.parents[4] resolves to /opt/dagster/app
+# (see ecommerce_analytics assets and dbt_runner).
+COPY orchestration/ /opt/dagster/app/orchestration/
+COPY pipelines/ecommerce_bronze/ /opt/dagster/app/pipelines/ecommerce_bronze/
+COPY dw/snowflake/analytics/ /opt/dagster/app/dw/snowflake/analytics/
+
+ENV PYTHONPATH=/opt/dagster/app
+ENV DAGSTER_HOME=/opt/dagster/dagster_home
+
+RUN mkdir -p $DAGSTER_HOME
+
+EXPOSE 4000
+
+# dagster code-server loads Definitions from the ecommerce_analytics package.
+CMD ["dagster", "code-server", "start", "-h", "0.0.0.0", "-p", "4000", "-m", "orchestration.dagster.ecommerce_analytics.definitions"]
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+  CMD python -c "import socket; s=socket.create_connection(('127.0.0.1', 4000), 2); s.close()"

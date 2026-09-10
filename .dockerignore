@@ -1,0 +1,12 @@
+# Shared by Compose builds with context at the repository root.
+**/.venv/
+**/__pycache__/
+**/*.pyc
+**/.dlt/secrets.toml
+**/profiles.yml
+**/logs/
+**/target/
+**/dbt_packages/
+**/*.lock
+.git/
+.specs/
