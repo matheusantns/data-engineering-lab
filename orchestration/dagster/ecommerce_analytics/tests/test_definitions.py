@@ -1,9 +1,9 @@
 import sys
 import unittest
 from types import ModuleType
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
-from dagster import AssetKey, AssetSelection
+from dagster import AssetKey, AssetSelection, materialize
 
 
 class DefinitionsTest(unittest.TestCase):
@@ -16,6 +16,10 @@ class DefinitionsTest(unittest.TestCase):
         from orchestration.dagster.ecommerce_analytics.definitions import defs
 
         cls.defs = defs
+
+    def setUp(self):
+        fake = sys.modules["ecommerce_bronze_pipeline"]
+        fake.load_ecommerce_bronze = MagicMock()
 
     def test_definitions_expose_three_layer_asset_keys(self):
         keys = {
@@ -38,6 +42,7 @@ class DefinitionsTest(unittest.TestCase):
         self.assertEqual(graph.get(bronze).parent_keys, set())
 
     def test_medallion_job_selects_three_assets_with_max_concurrent_runs_one(self):
+        # Lock parity with former run_daily.lock: at most one full-job run.
         job = self.defs.resolve_job_def("ecommerce_medallion_job")
         selected = {
             key.to_user_string() for key in job.asset_layer.executable_asset_keys
@@ -55,6 +60,7 @@ class DefinitionsTest(unittest.TestCase):
         self.assertEqual(schedule.job_name, "ecommerce_medallion_job")
 
     def test_silver_and_gold_are_independently_targetable(self):
+        # Replaces former -SkipExtract: selective layer materialization.
         graph = self.defs.resolve_asset_graph()
         silver = AssetKey("ecommerce_silver")
         gold = AssetKey("ecommerce_gold")
@@ -64,6 +70,61 @@ class DefinitionsTest(unittest.TestCase):
         gold_only = AssetSelection.assets(gold).resolve(graph)
         self.assertEqual(silver_only, {silver})
         self.assertEqual(gold_only, {gold})
+
+    def test_bronze_failure_short_circuits_silver_and_gold(self):
+        # Parity with run_daily: bronze failure must not run dbt layers.
+        from orchestration.dagster.ecommerce_analytics.assets.bronze import (
+            ecommerce_bronze,
+        )
+        from orchestration.dagster.ecommerce_analytics.assets.gold import ecommerce_gold
+        from orchestration.dagster.ecommerce_analytics.assets.silver import (
+            ecommerce_silver,
+        )
+
+        fake = sys.modules["ecommerce_bronze_pipeline"]
+        fake.load_ecommerce_bronze = MagicMock(
+            side_effect=RuntimeError("bronze extraction failed")
+        )
+
+        with patch(
+            "orchestration.dagster.ecommerce_analytics.assets.silver.run_dbt_build"
+        ) as mock_silver, patch(
+            "orchestration.dagster.ecommerce_analytics.assets.gold.run_dbt_build"
+        ) as mock_gold:
+            result = materialize(
+                [ecommerce_bronze, ecommerce_silver, ecommerce_gold],
+                raise_on_error=False,
+            )
+
+        self.assertFalse(result.success)
+        mock_silver.assert_not_called()
+        mock_gold.assert_not_called()
+
+    def test_silver_failure_short_circuits_gold(self):
+        from orchestration.dagster.ecommerce_analytics.assets.bronze import (
+            ecommerce_bronze,
+        )
+        from orchestration.dagster.ecommerce_analytics.assets.gold import ecommerce_gold
+        from orchestration.dagster.ecommerce_analytics.assets.silver import (
+            ecommerce_silver,
+        )
+
+        fake = sys.modules["ecommerce_bronze_pipeline"]
+        fake.load_ecommerce_bronze = MagicMock()
+
+        with patch(
+            "orchestration.dagster.ecommerce_analytics.assets.silver.run_dbt_build",
+            side_effect=RuntimeError("dbt silver failed"),
+        ), patch(
+            "orchestration.dagster.ecommerce_analytics.assets.gold.run_dbt_build"
+        ) as mock_gold:
+            result = materialize(
+                [ecommerce_bronze, ecommerce_silver, ecommerce_gold],
+                raise_on_error=False,
+            )
+
+        self.assertFalse(result.success)
+        mock_gold.assert_not_called()
 
 
 if __name__ == "__main__":
