@@ -1,0 +1,7 @@
+﻿dagster
+dagster-webserver
+dagster-postgres
+dagster-docker
+dlt[snowflake,sql-database]>=1.30.0
+psycopg2-binary>=2.9.1
+dbt-snowflake==1.10.8
