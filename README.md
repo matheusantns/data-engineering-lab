@@ -43,6 +43,7 @@ O agente de IA combinará duas estratégias:
 - **Snowflake:** armazenamento e processamento analítico.
 - **dbt:** transformação, modelagem, testes e documentação dos dados.
 - **Python + dlt:** extração e carga de dados.
+- **Dagster:** orquestração do pipeline diário (Bronze → Silver → Gold) via Docker Compose.
 
 ### Planejadas para experimentação
 
@@ -61,7 +62,8 @@ O primeiro cenário do laboratório utiliza dados de e-commerce:
 1. Uma pipeline Python com `dlt` carrega os dados no Snowflake.
 2. A camada **Bronze** preserva os dados ingeridos.
 3. O `dbt` transforma e testa os dados nas camadas **Silver** e **Gold**.
-4. A camada Gold será a base para indicadores, dashboards e consultas do agente de IA.
+4. O **Dagster** orquestra extract/transform (Compose + UI em `http://localhost:3000`); veja `dw/snowflake/RUNBOOK.md`.
+5. A camada Gold será a base para indicadores, dashboards e consultas do agente de IA.
 
 ## Estrutura do repositório
 
@@ -69,6 +71,8 @@ O primeiro cenário do laboratório utiliza dados de e-commerce:
 data-engineering-lab/
 ├── pipelines/
 │   └── ecommerce_bronze/     # Pipeline de ingestão com Python e dlt
+├── orchestration/
+│   └── dagster/              # Dagster OSS (Compose, code location, assets)
 └── dw/
     └── snowflake/
         └── analytics/        # Projeto dbt para Snowflake
