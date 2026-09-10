@@ -1,0 +1,111 @@
+# Dagster OSS stack: metadata Postgres + user code gRPC + webserver + daemon.
+# UI: http://localhost:3000
+# Copy orchestration/dagster/.env.example to .env (or export vars) before up.
+# Never commit real secrets; mount local dlt/dbt credentials as documented in .env.example.
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: dagster_postgres
+    environment:
+      POSTGRES_USER: ${DAGSTER_POSTGRES_USER:-dagster_user}
+      POSTGRES_PASSWORD: ${DAGSTER_POSTGRES_PASSWORD:-dagster_password}
+      POSTGRES_DB: ${DAGSTER_POSTGRES_DB:-dagster_db}
+    networks:
+      - dagster_network
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${DAGSTER_POSTGRES_USER:-dagster_user} -d ${DAGSTER_POSTGRES_DB:-dagster_db}",
+        ]
+      interval: 10s
+      timeout: 8s
+      retries: 5
+
+  user_code:
+    build:
+      context: ../..
+      dockerfile: orchestration/dagster/Dockerfile_user_code
+    container_name: dagster_user_code
+    image: dagster_user_code_image
+    restart: always
+    environment:
+      DAGSTER_POSTGRES_USER: ${DAGSTER_POSTGRES_USER:-dagster_user}
+      DAGSTER_POSTGRES_PASSWORD: ${DAGSTER_POSTGRES_PASSWORD:-dagster_password}
+      DAGSTER_POSTGRES_DB: ${DAGSTER_POSTGRES_DB:-dagster_db}
+      DAGSTER_POSTGRES_HOST: postgres
+      DAGSTER_CURRENT_IMAGE: dagster_user_code_image
+      # Host Postgres (erp sample on :5433): use host.docker.internal in dlt secrets on Windows.
+      DBT_SNOWFLAKE_ACCOUNT: ${DBT_SNOWFLAKE_ACCOUNT:-}
+      DBT_SNOWFLAKE_USER: ${DBT_SNOWFLAKE_USER:-}
+      DBT_ENV_SECRET_SNOWFLAKE_PASSWORD: ${DBT_ENV_SECRET_SNOWFLAKE_PASSWORD:-}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      # Mount local secrets (never commit these files). Paths are relative to this compose file.
+      - ${DLT_SECRETS_DIR:-../../pipelines/ecommerce_bronze/.dlt}:/opt/dagster/app/pipelines/ecommerce_bronze/.dlt:ro
+      - ${DBT_PROFILES_FILE:-../../dw/snowflake/analytics/profiles.yml}:/opt/dagster/app/dw/snowflake/analytics/profiles.yml:ro
+    networks:
+      - dagster_network
+
+  webserver:
+    build:
+      context: .
+      dockerfile: ./Dockerfile_dagster
+    entrypoint:
+      - dagster-webserver
+      - -h
+      - "0.0.0.0"
+      - -p
+      - "3000"
+      - -w
+      - workspace.yaml
+    container_name: dagster_webserver
+    expose:
+      - "3000"
+    ports:
+      - "3000:3000"
+    environment:
+      DAGSTER_POSTGRES_USER: ${DAGSTER_POSTGRES_USER:-dagster_user}
+      DAGSTER_POSTGRES_PASSWORD: ${DAGSTER_POSTGRES_PASSWORD:-dagster_password}
+      DAGSTER_POSTGRES_DB: ${DAGSTER_POSTGRES_DB:-dagster_db}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /tmp/io_manager_storage:/tmp/io_manager_storage
+    networks:
+      - dagster_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      user_code:
+        condition: service_started
+
+  daemon:
+    build:
+      context: .
+      dockerfile: ./Dockerfile_dagster
+    entrypoint:
+      - dagster-daemon
+      - run
+    container_name: dagster_daemon
+    restart: on-failure
+    environment:
+      DAGSTER_POSTGRES_USER: ${DAGSTER_POSTGRES_USER:-dagster_user}
+      DAGSTER_POSTGRES_PASSWORD: ${DAGSTER_POSTGRES_PASSWORD:-dagster_password}
+      DAGSTER_POSTGRES_DB: ${DAGSTER_POSTGRES_DB:-dagster_db}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /tmp/io_manager_storage:/tmp/io_manager_storage
+    networks:
+      - dagster_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      user_code:
+        condition: service_started
+
+networks:
+  dagster_network:
+    driver: bridge
+    name: dagster_network

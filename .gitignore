@@ -8,9 +8,13 @@
 *.pem
 profiles.yml
 secrets.toml
+.env
+orchestration/dagster/.env
 
 # Local runtime and dbt artifacts
 .venv/
+__pycache__/
+*.py[cod]
 *.lock
 logs/
 target/
