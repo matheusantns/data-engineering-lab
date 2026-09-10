@@ -10,7 +10,7 @@ Os comandos usam PowerShell e partem da raiz do repositório.
 - Edite SQL, modelos e testes no repositório. Aplique mudanças pelo terminal.
 - Não crie, altere ou exclua objetos diretamente no Snowsight. Use o Snowsight somente para investigação e consultas de leitura. Converta qualquer correção necessária em código versionado antes de aplicá-la.
 - `python`, `dbt parse`, cópias de exemplos e leitura de logs são ações locais.
-- `snow sql`, a extração dlt, `dbt debug`, `dbt build` e o runner conectam a serviços remotos. O bootstrap altera o Snowflake. Execute-os somente no ambiente de laboratório autorizado.
+- `snow sql`, a extração dlt, `dbt debug`, `dbt build` e materializações no Dagster conectam a serviços remotos. O bootstrap altera o Snowflake. Execute-os somente no ambiente de laboratório autorizado.
 - Não faça commit de `profiles.yml`, `secrets.toml`, senhas, chaves, logs, `target/` ou arquivos `*.lock`.
 
 ## Pré-requisitos
@@ -235,46 +235,38 @@ Erros de autenticação exigem corrigir conta, usuário ou senha. Erros de autor
 
 Confirme antes de iniciar:
 
-- PostgreSQL ativo;
-- variáveis dbt definidas no terminal;
-- `secrets.toml` local preenchido;
-- nenhuma outra execução ativa;
+- PostgreSQL de origem ativo (`erp\sample-postgres`, porta `5433`);
+- `secrets.toml` e `profiles.yml` locais preenchidos (nunca commitados);
+- variáveis dbt definidas se for materializar Silver/Gold;
+- stack Dagster disponível via Docker Compose;
 - Snowflake e warehouse disponíveis.
 
-Execute Bronze, Silver, Gold e testes com um único comando:
+Suba o orquestrador Dagster (webserver, daemon, code location e Postgres de metadados):
 
 ```powershell
-pwsh -NoProfile -File dw\snowflake\scripts\run_daily.ps1
+docker compose -f orchestration\dagster\docker-compose.yml up -d
+docker compose -f orchestration\dagster\docker-compose.yml ps
 ```
 
-Se `pwsh` não estiver disponível, use o Windows PowerShell:
+Abra a UI em `http://localhost:3000`.
 
-```powershell
-powershell -NoProfile -File dw\snowflake\scripts\run_daily.ps1
-```
+O schedule `ecommerce_medallion_daily` dispara o job completo Bronze → Silver → Gold todos os dias às **06:00** no fuso `America/Sao_Paulo`. A concorrência do job completo é 1 (não há execuções paralelas do medallion).
 
-O runner:
+Para uma execução manual imediata, na UI materialize o job `ecommerce_medallion_job` ou os assets `ecommerce_bronze`, `ecommerce_silver` e `ecommerce_gold`. Materialização seletiva de Silver ou Gold sozinha substitui o antigo `-SkipExtract` quando a Bronze válida já está carregada.
 
-1. cria `dw\snowflake\scripts\run_daily.lock`;
-2. executa a extração Bronze com `write_disposition="replace"`;
-3. executa `dbt build`, respeitando a DAG Silver antes de Gold e a política de warnings do projeto;
-4. grava um log em `dw\snowflake\analytics\logs`;
-5. remove o lock no sucesso ou na falha;
-6. retorna código diferente de zero na primeira etapa que falhar.
+### Rede: Postgres de origem a partir do container
 
-Considere a execução concluída somente quando o log contiver `Daily pipeline completed successfully`.
+O code location roda em Docker. Em Windows (Docker Desktop), aponte a origem dlt para `host.docker.internal` (porta `5433`), não `localhost` — dentro do container `localhost` não é o host. Veja `orchestration\dagster\.env.example`.
+
+### Secrets
+
+Monte ou copie apenas localmente `pipelines\ecommerce_bronze\.dlt\secrets.toml` e `dw\snowflake\analytics\profiles.yml`. Não faça commit desses arquivos nem de senhas em `.env`.
+
+Considere a execução concluída quando o run do job na UI estiver com status de sucesso e as camadas esperadas forem materializadas.
 
 ## Validar uma execução
 
-Localize o log mais recente e procure falhas:
-
-```powershell
-$latestLog = Get-ChildItem dw\snowflake\analytics\logs\run_daily_*.log |
-    Sort-Object LastWriteTime -Descending |
-    Select-Object -First 1
-Get-Content $latestLog.FullName
-Select-String -Path $latestLog.FullName -Pattern "failed|error|warn"
-```
+Na UI do Dagster (`http://localhost:3000`), abra o run mais recente do job `ecommerce_medallion_job` e revise os logs de cada asset.
 
 Valide novamente todos os modelos e testes quando necessário:
 
@@ -292,20 +284,20 @@ dbt docs generate --project-dir dw\snowflake\analytics --profiles-dir dw\snowfla
 
 ### A extração Bronze falhou
 
-Sinais: o log contém `Bronze extraction failed`; `Starting dbt build` não aparece.
+Sinais: o asset `ecommerce_bronze` falhou na UI; Silver e Gold não foram materializados nesse run.
 
-Verifique o PostgreSQL e execute a extração isoladamente:
+Verifique o PostgreSQL e execute a extração isoladamente (no host, com o venv do lab):
 
 ```powershell
 docker compose -f erp\sample-postgres\docker-compose.yml ps
 python pipelines\ecommerce_bronze\ecommerce_bronze_pipeline.py
 ```
 
-Corrija a conexão indicada pela exceção. Depois execute o runner completo novamente. Não execute somente dbt se a Bronze diária ainda não concluiu.
+Corrija a conexão indicada pela exceção. Depois rematerialize o job completo na UI. Não execute somente dbt se a Bronze diária ainda não concluiu.
 
 ### O build dbt falhou
 
-Sinais: o log contém `dbt build failed` e identifica o modelo ou teste causador.
+Sinais: `ecommerce_silver` ou `ecommerce_gold` falhou na UI e identifica o modelo ou teste causador.
 
 Reproduza com o mesmo projeto e profile:
 
@@ -313,11 +305,7 @@ Reproduza com o mesmo projeto e profile:
 dbt build --project-dir dw\snowflake\analytics --profiles-dir dw\snowflake\analytics
 ```
 
-Corrija a Bronze, o modelo ou o teste no Git. Se a Bronze válida já foi carregada, reexecute somente transformação e testes:
-
-```powershell
-pwsh -NoProfile -File dw\snowflake\scripts\run_daily.ps1 -SkipExtract
-```
+Corrija a Bronze, o modelo ou o teste no Git. Se a Bronze válida já foi carregada, rematerialize somente `ecommerce_silver` e/ou `ecommerce_gold` na UI.
 
 Não marque uma execução parcial como concluída.
 
@@ -331,11 +319,11 @@ Valide a conexão:
 dbt debug --project-dir dw\snowflake\analytics --profiles-dir dw\snowflake\analytics
 ```
 
-Restaure a conectividade ou o warehouse. Depois use o runner completo se a Bronze não concluiu, ou `-SkipExtract` se a Bronze válida já concluiu.
+Restaure a conectividade ou o warehouse. Depois rematerialize o job completo se a Bronze não concluiu, ou somente Silver/Gold se a Bronze válida já concluiu.
 
 ### Um teste crítico falhou
 
-O nome do teste e a consulta compilada ficam no log e em `dw\snowflake\analytics\target`. Execute o recurso indicado de forma focada:
+O nome do teste e a consulta compilada ficam no log do run no Dagster e em `dw\snowflake\analytics\target`. Execute o recurso indicado de forma focada:
 
 ```powershell
 dbt build --project-dir dw\snowflake\analytics --profiles-dir dw\snowflake\analytics --select <resource-name>+
@@ -351,39 +339,26 @@ Confirme o valor na Bronze ou Silver com consulta de leitura. Decida e versione 
 
 ### A Bronze está vazia
 
-Confirme se a origem realmente não possui dados. Relações Silver e Gold vazias são válidas; o pipeline não deve fabricar vendas. Se a origem deveria ter dados, corrija a origem ou as credenciais e execute o runner completo.
+Confirme se a origem realmente não possui dados. Relações Silver e Gold vazias são válidas; o pipeline não deve fabricar vendas. Se a origem deveria ter dados, corrija a origem ou as credenciais e rematerialize o job completo.
 
-### Já existe um lock
+### Já existe um run em andamento
 
-Sinal: `Daily pipeline is already in progress`.
-
-Leia o PID registrado:
-
-```powershell
-Get-Content dw\snowflake\scripts\run_daily.lock
-Get-Process -Id (Get-Content dw\snowflake\scripts\run_daily.lock) -ErrorAction SilentlyContinue
-```
-
-Se o processo existir, aguarde. Remova o lock somente depois de comprovar que o processo não existe:
-
-```powershell
-Remove-Item dw\snowflake\scripts\run_daily.lock
-pwsh -NoProfile -File dw\snowflake\scripts\run_daily.ps1
-```
+A instância limita a concorrência do job medallion a 1. Se um segundo disparo for enfileirado, aguarde o run ativo terminar na UI. Não inicie execuções paralelas manuais do mesmo job completo.
 
 ## Política de reexecução
 
-- Não há retry automático.
-- Preserve o log da falha e corrija a causa antes de reexecutar.
-- Use o runner completo quando a Bronze falhou, não iniciou ou precisa ser recarregada.
-- Use `-SkipExtract` somente quando a Bronze válida já concluiu e a falha ocorreu no dbt.
-- O runner reconstrói a Gold e pode ser repetido. Sem alteração da Bronze ou do código, contagens e somas por moeda devem permanecer iguais.
-- Nunca inicie uma segunda execução enquanto o primeiro processo estiver ativo.
+- Não há retry automático no MVP.
+- Preserve o log do run com falha na UI e corrija a causa antes de rematerializar.
+- Use o job completo quando a Bronze falhou, não iniciou ou precisa ser recarregada.
+- Materialize somente Silver/Gold quando a Bronze válida já concluiu e a falha ocorreu no dbt.
+- O rebuild da Gold pode ser repetido. Sem alteração da Bronze ou do código, contagens e somas por moeda devem permanecer iguais.
+- Nunca inicie uma segunda execução do job completo enquanto o primeiro run estiver ativo.
 
-Ao terminar a sessão, remova as variáveis sensíveis:
+Ao terminar a sessão, remova as variáveis sensíveis e, se desejar, pare o Compose:
 
 ```powershell
 Remove-Item Env:DBT_ENV_SECRET_SNOWFLAKE_PASSWORD -ErrorAction SilentlyContinue
 Remove-Item Env:SNOWFLAKE_LOADER_PASSWORD -ErrorAction SilentlyContinue
+docker compose -f orchestration\dagster\docker-compose.yml down
 deactivate
 ```
