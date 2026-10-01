@@ -53,7 +53,8 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile_dagster
-    entrypoint:
+    # `command` (not entrypoint) so image ENTRYPOINT can inject host bind paths.
+    command:
       - dagster-webserver
       - -h
       - "0.0.0.0"
@@ -70,6 +71,11 @@ services:
       DAGSTER_POSTGRES_USER: ${DAGSTER_POSTGRES_USER:-dagster_user}
       DAGSTER_POSTGRES_PASSWORD: ${DAGSTER_POSTGRES_PASSWORD:-dagster_password}
       DAGSTER_POSTGRES_DB: ${DAGSTER_POSTGRES_DB:-dagster_db}
+      DLT_SECRETS_HOST_PATH: ${DLT_SECRETS_HOST_PATH}
+      DBT_PROFILES_HOST_PATH: ${DBT_PROFILES_HOST_PATH}
+      DBT_SNOWFLAKE_ACCOUNT: ${DBT_SNOWFLAKE_ACCOUNT:-}
+      DBT_SNOWFLAKE_USER: ${DBT_SNOWFLAKE_USER:-}
+      DBT_ENV_SECRET_SNOWFLAKE_PASSWORD: ${DBT_ENV_SECRET_SNOWFLAKE_PASSWORD:-}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /tmp/io_manager_storage:/tmp/io_manager_storage
@@ -85,7 +91,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile_dagster
-    entrypoint:
+    command:
       - dagster-daemon
       - run
     container_name: dagster_daemon
@@ -94,6 +100,11 @@ services:
       DAGSTER_POSTGRES_USER: ${DAGSTER_POSTGRES_USER:-dagster_user}
       DAGSTER_POSTGRES_PASSWORD: ${DAGSTER_POSTGRES_PASSWORD:-dagster_password}
       DAGSTER_POSTGRES_DB: ${DAGSTER_POSTGRES_DB:-dagster_db}
+      DLT_SECRETS_HOST_PATH: ${DLT_SECRETS_HOST_PATH}
+      DBT_PROFILES_HOST_PATH: ${DBT_PROFILES_HOST_PATH}
+      DBT_SNOWFLAKE_ACCOUNT: ${DBT_SNOWFLAKE_ACCOUNT:-}
+      DBT_SNOWFLAKE_USER: ${DBT_SNOWFLAKE_USER:-}
+      DBT_ENV_SECRET_SNOWFLAKE_PASSWORD: ${DBT_ENV_SECRET_SNOWFLAKE_PASSWORD:-}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /tmp/io_manager_storage:/tmp/io_manager_storage

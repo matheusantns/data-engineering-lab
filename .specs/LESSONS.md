@@ -74,6 +74,30 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: validation.md:100-102 currency edge case (data-quality)
 - last seen: 2026-09-09T04:09:39Z
 
+### L-011 - When an AC requires a failure mode for missing secrets, assert the concrete error path or narrow the AC to non-commit plus a defined exception type
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `orchestration/dagster` · harmful: 0
+- features: dagster-orchestration
+- evidence: validation.md:DAG-09 / Compose AC3 (orchestration/dagster)
+- last seen: 2026-09-10T00:39:11Z
+
+### L-012 - Assert only outcomes the unit layer can observe for schedules, or add an evaluation fixture; do not treat job_name wiring as proof that a tick starts a run
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `orchestration/dagster` · harmful: 0
+- features: dagster-orchestration
+- evidence: validation.md:DAG-12 / Schedule AC2 (orchestration/dagster)
+- last seen: 2026-09-10T00:39:12Z
+
+### L-013 - When concurrency is enforced in instance yaml, assert the yaml queue limits in tests instead of only documentary job metadata
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `orchestration/dagster` · harmful: 0
+- features: dagster-orchestration
+- evidence: validation.md:DAG-13 / Schedule AC3 (orchestration/dagster)
+- last seen: 2026-09-10T00:39:12Z
+
+### L-014 - If JobDefinition cannot encode a required runtime limit, test the instance config that actually enforces it and keep metadata optional
+- signal: `spec_deviation` · recurrence: 1 feature(s) · scope: `orchestration/dagster` · harmful: 0
+- features: dagster-orchestration
+- evidence: definitions.py:12-14 SPEC_DEVIATION (orchestration/dagster)
+- last seen: 2026-09-10T00:39:12Z
+
 ## Quarantined (failed when applied - ignore)
 
 A confirmed lesson that recurred alongside failure. Kept for the maintainer to review.

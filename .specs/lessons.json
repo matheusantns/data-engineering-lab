@@ -3,7 +3,7 @@
   "promote_threshold": 2,
   "window_days": 45,
   "quarantine_threshold": 2,
-  "next_id": 11,
+  "next_id": 15,
   "lessons": [
     {
       "id": "L-001",
@@ -184,6 +184,78 @@
       ],
       "created": "2026-09-09T04:09:39Z",
       "last_seen": "2026-09-09T04:09:39Z"
+    },
+    {
+      "id": "L-011",
+      "key": "spec_precision_gap::when an ac requires a failure mode for missing secrets assert the concrete error path or narrow the ac to non commit plus a defined exception type",
+      "text": "When an AC requires a failure mode for missing secrets, assert the concrete error path or narrow the AC to non-commit plus a defined exception type",
+      "signal": "spec_precision_gap",
+      "scope": "orchestration/dagster",
+      "status": "candidate",
+      "features": [
+        "dagster-orchestration"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md:DAG-09 / Compose AC3 (orchestration/dagster)"
+      ],
+      "created": "2026-09-10T00:39:11Z",
+      "last_seen": "2026-09-10T00:39:11Z"
+    },
+    {
+      "id": "L-012",
+      "key": "spec_precision_gap::assert only outcomes the unit layer can observe for schedules or add an evaluation fixture do not treat job name wiring as proof that a tick starts a run",
+      "text": "Assert only outcomes the unit layer can observe for schedules, or add an evaluation fixture; do not treat job_name wiring as proof that a tick starts a run",
+      "signal": "spec_precision_gap",
+      "scope": "orchestration/dagster",
+      "status": "candidate",
+      "features": [
+        "dagster-orchestration"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md:DAG-12 / Schedule AC2 (orchestration/dagster)"
+      ],
+      "created": "2026-09-10T00:39:12Z",
+      "last_seen": "2026-09-10T00:39:12Z"
+    },
+    {
+      "id": "L-013",
+      "key": "spec_precision_gap::when concurrency is enforced in instance yaml assert the yaml queue limits in tests instead of only documentary job metadata",
+      "text": "When concurrency is enforced in instance yaml, assert the yaml queue limits in tests instead of only documentary job metadata",
+      "signal": "spec_precision_gap",
+      "scope": "orchestration/dagster",
+      "status": "candidate",
+      "features": [
+        "dagster-orchestration"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md:DAG-13 / Schedule AC3 (orchestration/dagster)"
+      ],
+      "created": "2026-09-10T00:39:12Z",
+      "last_seen": "2026-09-10T00:39:12Z"
+    },
+    {
+      "id": "L-014",
+      "key": "spec_deviation::if jobdefinition cannot encode a required runtime limit test the instance config that actually enforces it and keep metadata optional",
+      "text": "If JobDefinition cannot encode a required runtime limit, test the instance config that actually enforces it and keep metadata optional",
+      "signal": "spec_deviation",
+      "scope": "orchestration/dagster",
+      "status": "candidate",
+      "features": [
+        "dagster-orchestration"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "definitions.py:12-14 SPEC_DEVIATION (orchestration/dagster)"
+      ],
+      "created": "2026-09-10T00:39:12Z",
+      "last_seen": "2026-09-10T00:39:12Z"
     }
   ]
 }

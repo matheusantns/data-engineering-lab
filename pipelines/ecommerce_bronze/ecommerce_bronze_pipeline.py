@@ -43,9 +43,13 @@ def load_ecommerce_bronze() -> None:
         dataset_name="bronze",
     )
 
+    # drop_resources: write_disposition="replace" swaps data but does not remove
+    # columns. Without a refresh, an old NOT NULL password_hash left in Snowflake
+    # after exclude_sensitive_columns still receives NULL and fails COPY.
     load_info = pipeline.run(
         source,
         write_disposition="replace",
+        refresh="drop_resources",
     )
 
     print(load_info)

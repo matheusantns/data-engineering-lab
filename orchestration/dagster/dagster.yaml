@@ -5,6 +5,10 @@
 # ecommerce_medallion_job (tag limit) and caps the instance queue at 1 so the
 # full medallion job cannot run in parallel (lock parity with former run_daily).
 # Job metadata max_concurrent_runs in definitions.py remains documentary for unit tests.
+#
+# DockerRunLauncher volumes: host paths are injected at container start by
+# docker-entrypoint.sh from DLT_SECRETS_HOST_PATH / DBT_PROFILES_HOST_PATH
+# (see docker-compose.yml). Placeholders below are replaced before the daemon starts.
 
 scheduler:
   module: dagster.core.scheduler
@@ -28,11 +32,18 @@ run_launcher:
       - DAGSTER_POSTGRES_USER
       - DAGSTER_POSTGRES_PASSWORD
       - DAGSTER_POSTGRES_DB
+      - DBT_SNOWFLAKE_ACCOUNT
+      - DBT_SNOWFLAKE_USER
+      - DBT_ENV_SECRET_SNOWFLAKE_PASSWORD
     network: dagster_network
     container_kwargs:
+      extra_hosts:
+        - "host.docker.internal:host-gateway"
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock
         - /tmp/io_manager_storage:/tmp/io_manager_storage
+        - __DLT_SECRETS_HOST_PATH__:/opt/dagster/app/pipelines/ecommerce_bronze/.dlt:ro
+        - __DBT_PROFILES_HOST_PATH__:/opt/dagster/app/dw/snowflake/analytics/profiles.yml:ro
 
 run_storage:
   module: dagster_postgres.run_storage

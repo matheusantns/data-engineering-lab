@@ -16,7 +16,9 @@ COPY orchestration/ /opt/dagster/app/orchestration/
 COPY pipelines/ecommerce_bronze/ /opt/dagster/app/pipelines/ecommerce_bronze/
 COPY dw/snowflake/analytics/ /opt/dagster/app/dw/snowflake/analytics/
 
-ENV PYTHONPATH=/opt/dagster/app
+# Include bronze pipeline dir so `import ecommerce_bronze_pipeline` works even
+# if step workers reset sys.path to the process PYTHONPATH.
+ENV PYTHONPATH=/opt/dagster/app:/opt/dagster/app/pipelines/ecommerce_bronze
 ENV DAGSTER_HOME=/opt/dagster/dagster_home
 
 RUN mkdir -p $DAGSTER_HOME
