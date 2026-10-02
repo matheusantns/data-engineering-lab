@@ -1,0 +1,14 @@
+# Copy to terraform.tfvars (gitignored) and replace the ARN with your principal.
+# Do not commit terraform.tfvars.
+#
+# Idempotency (AWS-03): after the first successful apply, run
+#   terraform apply -var-file=terraform.tfvars
+# a second time. It must complete without failing only because the resources
+# already exist. The local unit/build gate does not call AWS.
+
+aws_profile = "data-lab"
+aws_region  = "us-east-2"
+name_prefix = "datalabecom"
+
+# Placeholder only. Replace with your IAM user or role ARN.
+operator_principal_arn = "arn:aws:iam::123456789012:user/REPLACE_ME"
