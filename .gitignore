@@ -20,3 +20,11 @@ logs/
 target/
 dbt_packages/
 .specs/
+
+# Terraform (state and secret tfvars stay local; lockfile is versioned)
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+!.terraform.lock.hcl
