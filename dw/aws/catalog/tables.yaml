@@ -1,0 +1,180 @@
+# Glue and Parquet column contract for ecommerce_bronze.
+# Types: bigint, text/citext→string, boolean, timestamptz→timestamp,
+# numeric→double, jsonb→string, char(n)→string, int→int, uuid→string.
+# Omits users.password_hash and generated products.search.
+
+tables:
+  - name: users
+    columns:
+      - { name: user_id, type: bigint }
+      - { name: email, type: string }
+      - { name: first_name, type: string }
+      - { name: last_name, type: string }
+      - { name: company_name, type: string }
+      - { name: phone, type: string }
+      - { name: is_active, type: boolean }
+      - { name: created_at, type: timestamp }
+      - { name: updated_at, type: timestamp }
+      - { name: deleted_at, type: timestamp }
+
+  - name: addresses
+    columns:
+      - { name: address_id, type: bigint }
+      - { name: user_id, type: bigint }
+      - { name: label, type: string }
+      - { name: line1, type: string }
+      - { name: line2, type: string }
+      - { name: city, type: string }
+      - { name: region, type: string }
+      - { name: postal_code, type: string }
+      - { name: country_code, type: string }
+      - { name: is_default_shipping, type: boolean }
+      - { name: is_default_billing, type: boolean }
+      - { name: created_at, type: timestamp }
+      - { name: updated_at, type: timestamp }
+
+  - name: categories
+    columns:
+      - { name: category_id, type: bigint }
+      - { name: parent_category_id, type: bigint }
+      - { name: name, type: string }
+      - { name: slug, type: string }
+      - { name: description, type: string }
+      - { name: created_at, type: timestamp }
+      - { name: updated_at, type: timestamp }
+
+  - name: products
+    columns:
+      - { name: product_id, type: bigint }
+      - { name: category_id, type: bigint }
+      - { name: name, type: string }
+      - { name: slug, type: string }
+      - { name: description, type: string }
+      - { name: attributes, type: string }
+      - { name: is_active, type: boolean }
+      - { name: created_at, type: timestamp }
+      - { name: updated_at, type: timestamp }
+      - { name: deleted_at, type: timestamp }
+
+  - name: product_variants
+    columns:
+      - { name: variant_id, type: bigint }
+      - { name: product_id, type: bigint }
+      - { name: sku, type: string }
+      - { name: name, type: string }
+      - { name: price, type: double }
+      - { name: currency, type: string }
+      - { name: attributes, type: string }
+      - { name: is_active, type: boolean }
+      - { name: created_at, type: timestamp }
+      - { name: updated_at, type: timestamp }
+
+  - name: product_images
+    columns:
+      - { name: image_id, type: bigint }
+      - { name: product_id, type: bigint }
+      - { name: url, type: string }
+      - { name: alt_text, type: string }
+      - { name: sort_order, type: int }
+      - { name: created_at, type: timestamp }
+
+  - name: inventory
+    columns:
+      - { name: variant_id, type: bigint }
+      - { name: quantity_on_hand, type: int }
+      - { name: quantity_reserved, type: int }
+      - { name: updated_at, type: timestamp }
+
+  - name: carriers
+    columns:
+      - { name: carrier_id, type: bigint }
+      - { name: name, type: string }
+      - { name: phone, type: string }
+      - { name: created_at, type: timestamp }
+
+  - name: carts
+    columns:
+      - { name: cart_id, type: bigint }
+      - { name: user_id, type: bigint }
+      - { name: session_token, type: string }
+      - { name: status, type: string }
+      - { name: created_at, type: timestamp }
+      - { name: updated_at, type: timestamp }
+
+  - name: cart_items
+    columns:
+      - { name: cart_id, type: bigint }
+      - { name: variant_id, type: bigint }
+      - { name: qty, type: int }
+      - { name: created_at, type: timestamp }
+      - { name: updated_at, type: timestamp }
+
+  - name: orders
+    columns:
+      - { name: order_id, type: bigint }
+      - { name: user_id, type: bigint }
+      - { name: order_number, type: string }
+      - { name: status, type: string }
+      - { name: currency, type: string }
+      - { name: subtotal, type: double }
+      - { name: discount_total, type: double }
+      - { name: shipping_total, type: double }
+      - { name: grand_total, type: double }
+      - { name: ship_name, type: string }
+      - { name: ship_line1, type: string }
+      - { name: ship_city, type: string }
+      - { name: ship_region, type: string }
+      - { name: ship_postal_code, type: string }
+      - { name: ship_country_code, type: string }
+      - { name: ordered_at, type: timestamp }
+      - { name: created_at, type: timestamp }
+      - { name: updated_at, type: timestamp }
+
+  - name: order_items
+    columns:
+      - { name: order_id, type: bigint }
+      - { name: variant_id, type: bigint }
+      - { name: product_name, type: string }
+      - { name: sku, type: string }
+      - { name: unit_price, type: double }
+      - { name: qty, type: int }
+      - { name: discount, type: double }
+      - { name: line_total, type: double }
+
+  - name: order_status_history
+    columns:
+      - { name: history_id, type: bigint }
+      - { name: order_id, type: bigint }
+      - { name: status, type: string }
+      - { name: note, type: string }
+      - { name: changed_at, type: timestamp }
+
+  - name: payments
+    columns:
+      - { name: payment_id, type: bigint }
+      - { name: order_id, type: bigint }
+      - { name: amount, type: double }
+      - { name: currency, type: string }
+      - { name: provider, type: string }
+      - { name: provider_ref, type: string }
+      - { name: status, type: string }
+      - { name: created_at, type: timestamp }
+
+  - name: shipments
+    columns:
+      - { name: shipment_id, type: bigint }
+      - { name: order_id, type: bigint }
+      - { name: carrier_id, type: bigint }
+      - { name: tracking_number, type: string }
+      - { name: shipped_at, type: timestamp }
+      - { name: delivered_at, type: timestamp }
+      - { name: created_at, type: timestamp }
+
+  - name: inventory_movements
+    columns:
+      - { name: movement_id, type: bigint }
+      - { name: variant_id, type: bigint }
+      - { name: quantity_delta, type: int }
+      - { name: reason, type: string }
+      - { name: order_id, type: bigint }
+      - { name: created_at, type: timestamp }
